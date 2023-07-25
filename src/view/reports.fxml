@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.reportsController">
+   <children>
+      <Label fx:id="ReportsLbl" layoutX="44.0" layoutY="49.0" text="Reports">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TableView fx:id="TypeAndMonthTableview" layoutX="44.0" layoutY="94.0" prefHeight="200.0" prefWidth="467.0">
+        <columns>
+          <TableColumn prefWidth="173.19997787475586" text="Appointment Type" />
+          <TableColumn fx:id="AppointmentMonthColumn" prefWidth="166.00001525878906" text="Appointment Month" />
+            <TableColumn fx:id="AppointmentTotalColumn" prefWidth="129.199951171875" text="Appointment Total" />
+        </columns>
+      </TableView>
+      <TableView fx:id="ContactScheduleTable" layoutX="44.0" layoutY="378.0" prefHeight="240.0" prefWidth="985.0">
+         <columns>
+            <TableColumn fx:id="ContactScheduleID" prefWidth="117.60000228881836" text="Appointment ID" />
+            <TableColumn fx:id="ContactScheduleAppointmentTitleColumn" prefWidth="149.2000274658203" text="Title" />
+            <TableColumn fx:id="ContactScheduleAppointmentTypeColumn" prefWidth="126.800048828125" text="Type" />
+            <TableColumn fx:id="ContactScheduleAppointmentDescriptionColumn" prefWidth="198.79998779296875" text="Description" />
+            <TableColumn fx:id="ContactScheduleAppointmentStartColumn" prefWidth="139.5999755859375" text="Start" />
+            <TableColumn fx:id="ContactScheduleAppointmentEndColumn" prefWidth="155.5999755859375" text="End" />
+            <TableColumn fx:id="ContactScheduleAppointmentCustomerColumn" prefWidth="103.59991455078125" text="Customer ID" />
+         </columns>
+      </TableView>
+      <Label fx:id="SelectContactLbl" layoutX="44.0" layoutY="351.0" text="Select Contact" />
+      <ComboBox fx:id="SelectContactCombo" layoutX="128.0" layoutY="347.0" onAction="#OnActionSelectContact" prefWidth="150.0" />
+      <TableView fx:id="ApptByCountryTable" layoutX="562.0" layoutY="94.0" prefHeight="200.0" prefWidth="467.0">
+         <columns>
+            <TableColumn fx:id="ApptbyCountryLbl" prefWidth="245.800048828125" text="Country" />
+            <TableColumn fx:id="ApptbyCountryTotalLbl" prefWidth="222.19989013671875" text="Appointment Total" />
+         </columns>
+      </TableView>
+      <Button fx:id="CancelBtn" layoutX="958.0" layoutY="637.0" mnemonicParsing="false" onAction="#OnActionCancelReports" text="Cancel" />
+   </children>
+</AnchorPane>
