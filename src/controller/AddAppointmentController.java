@@ -50,6 +50,12 @@ public class AddAppointmentController implements Initializable {
     public TextField AptCustIDTxt;
     public Label AptUserIDLbl;
 
+
+
+    //User lambadas here for start date/end date and for start/end time
+
+
+
     @Override
     //code in initialize to use lambdas to add info to contact, start and end time combo box
     public void initialize(URL url, ResourceBundle resourceBundle) {

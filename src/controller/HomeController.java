@@ -33,6 +33,7 @@ public class HomeController implements Initializable {
     Stage stage;
     Parent scene;
 
+    public TableColumn CustomersStateColumn;
     public Label SchedulingSystem_Lbl;
     public Label Customers_Lbl;
     public Label Appointments_Lbl;
@@ -66,6 +67,8 @@ public class HomeController implements Initializable {
     public RadioButton AppointmentsViewMonthRadio;
     public RadioButton AppointmentsViewWeekRadio;
     public appointment appointmentToDelete;
+    public customer customerToDelete;
+    private ObservableList<appointment> AppointmentList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -81,6 +84,8 @@ public class HomeController implements Initializable {
         CustomersPostalColumn.setCellValueFactory(new PropertyValueFactory<>("customerPostalCode"));
         CustomerPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("customerPhoneNumber"));
         CustomersDivColumn.setCellValueFactory(new PropertyValueFactory<>("customerDivID"));
+        CustomersDivColumn.setCellValueFactory(new PropertyValueFactory<>("customerDivID"));
+        CustomersStateColumn.setCellValueFactory(new PropertyValueFactory<>("customerDivisionName"));
 
 
         //Insert appointment information pulled from database into Appointments table.
@@ -142,11 +147,31 @@ public class HomeController implements Initializable {
     }
 
     /**
-     * Allows the user to delete customer if appropriate.
+     * Allows the user to delete customer if they do not have an appointment.
      *
      * @param actionEvent button click
      */
-    public void OnActionDeleteCustomer(ActionEvent actionEvent) {
+    public void OnActionDeleteCustomer(ActionEvent actionEvent) throws SQLException {
+        customerToDelete = (customer) CustomersTableView.getSelectionModel().getSelectedItem();
+        int customerWAppointmentID = ((customer) CustomersTableView.getSelectionModel().getSelectedItem()).getCustomerID();
+        if (customerToDelete == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("ERROR: No Customer Selected");
+            alert.show();
+        } else if (appointmentDatabase.checkAssociatedAppointment(customerWAppointmentID)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("ERROR: Unable to delete customer that has an appointment");
+            alert.show();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("WARNING: Please confirm you would like to delete");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get()== ButtonType.OK) {
+                customerDatabase.deleteCustomer(customerWAppointmentID);
+                CustomersTableView.setItems(getAllCustomers());
+
+            }
+        }
     }
 
     /**
@@ -154,7 +179,7 @@ public class HomeController implements Initializable {
      *
      * @param actionEvent button click
      */
-    public void OnActionExit(ActionEvent actionEvent) {
+    public void OnActionExit (ActionEvent actionEvent){
         JDBC.closeConnection();
         System.exit(0);
     }
@@ -164,7 +189,7 @@ public class HomeController implements Initializable {
      *
      * @param actionEvent button click
      */
-    public void OnActionDeleteAppointment(ActionEvent actionEvent) throws SQLException, IOException {
+    public void OnActionDeleteAppointment (ActionEvent actionEvent) throws SQLException, IOException {
         appointmentToDelete = (appointment) AppointmentsTableView.getSelectionModel().getSelectedItem();
         if (appointmentToDelete == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -176,9 +201,7 @@ public class HomeController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 appointmentDatabase.deleteAppointment(appointmentToDelete.getAppointmentID());
-                ObservableList appointmentList = appointmentDatabase.getAllAppointments();
-                AppointmentsTableView.setItems(appointmentList);
-                AppointmentsTableView.refresh();
+                AppointmentsTableView.setItems(getAllAppointments());
             }
         }
     }

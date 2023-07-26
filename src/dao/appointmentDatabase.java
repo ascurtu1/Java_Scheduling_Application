@@ -11,9 +11,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+
+/** This class is used for SQL statements to access the appointments database table. */
 public class appointmentDatabase {
 
-
+    /**
+     * Gets all appointment information from the database.
+     *
+     * @return appointmentList the list of all appointment information.
+     */
     public static ObservableList<appointment> getAllAppointments() throws SQLException {
         ObservableList<appointment> appointmentList = FXCollections.observableArrayList();
         try {
@@ -46,15 +52,47 @@ public class appointmentDatabase {
 
     }
 
-
+    /**
+     * Deletes the appointment information from the database identified from the selected appointment ID.
+     *
+     * @param appointmentID
+     */
     public static void deleteAppointment(int appointmentID) {
         try {
             String sqldelete = "DELETE FROM appointments WHERE Appointment_ID = ?";
-            PreparedStatement deleteAppointment = JDBC.getConnection().prepareStatement(sqldelete);
-            deleteAppointment.setInt(1, appointmentID);
-            deleteAppointment.execute();
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sqldelete);
+            ps.setInt(1, appointmentID);
+            ps.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Checks if there is an associated appointment with the customer by matching customer ID on both tables.
+     *
+     * @param customerID
+     */
+
+    public static boolean checkAssociatedAppointment(int customerID) throws SQLException {
+        ObservableList<Integer> ListCustomerID = FXCollections.observableArrayList();
+        try {
+            String IDquery = "SELECT Customer_ID FROM appointments";
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(IDquery);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int newCustomerID = rs.getInt("Customer_ID");
+                if (newCustomerID == customerID) {
+                    return true;
+                }
+            }
+
+        } catch (SQLException e){
+                e.printStackTrace();
+            }
+        return false;
+    }
 }
+
+

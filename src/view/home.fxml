@@ -24,12 +24,13 @@
       <Button fx:id="Reports_Button" layoutX="827.0" layoutY="67.0" mnemonicParsing="false" onAction="#OnActionGoToReports" prefHeight="26.0" prefWidth="150.0" text="Reports" />
       <TableView fx:id="CustomersTableView" layoutX="50.0" layoutY="106.0" prefHeight="206.0" prefWidth="928.0">
         <columns>
-          <TableColumn fx:id="CustomersIDColumn" prefWidth="75.0" text="ID" />
-          <TableColumn fx:id="CustomersNameColumn" prefWidth="183.2000274658203" text="Name" />
-            <TableColumn fx:id="CustomersAddressColumn" prefWidth="213.60003662109375" text="Address" />
-            <TableColumn fx:id="CustomersPostalColumn" prefWidth="96.0" text="Postal Code" />
-            <TableColumn fx:id="CustomerPhoneColumn" prefWidth="218.0" text="Phone" />
-            <TableColumn fx:id="CustomersDivColumn" prefWidth="139.99993896484375" text="Division ID" />
+          <TableColumn fx:id="CustomersIDColumn" prefWidth="76.0" text="ID" />
+          <TableColumn fx:id="CustomersNameColumn" prefWidth="185.0" text="Name" />
+            <TableColumn fx:id="CustomersAddressColumn" prefWidth="189.0" text="Address" />
+            <TableColumn fx:id="CustomersStateColumn" prefWidth="118.0" text="State" />
+            <TableColumn fx:id="CustomersPostalColumn" prefWidth="110.0" text="Postal Code" />
+            <TableColumn fx:id="CustomersDivColumn" prefWidth="98.0" text="Division ID" />
+            <TableColumn fx:id="CustomerPhoneColumn" maxWidth="248.0" prefWidth="151.0" text="Phone" />
         </columns>
       </TableView>
       <TableView fx:id="AppointmentsTableView" layoutX="50.0" layoutY="413.0" prefHeight="206.0" prefWidth="928.0">

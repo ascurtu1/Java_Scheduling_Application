@@ -102,7 +102,11 @@ public class loginController implements Initializable {
             outputFile.close();
         }
 
-
+    /**
+     * Allows the user to exit the application.
+     *
+     * @param actionEvent button click
+     */
     public void OnActionExit (ActionEvent actionEvent){
             JDBC.closeConnection();
             System.exit(0);

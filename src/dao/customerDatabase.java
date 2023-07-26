@@ -11,8 +11,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
+/** This class is used for SQL statements to access the customers database table. */
 public class customerDatabase {
 
+
+    /** This method creates a list of all customers and their information.
+     * @return customerList of all customers and their information from the MySQL database. */
     public static ObservableList<customer> getAllCustomers() throws SQLException {
         ObservableList<customer> customerList = FXCollections.observableArrayList();
         try {
@@ -38,6 +43,19 @@ public class customerDatabase {
         }
         return customerList;
 
-
     }
+
+    /** This method deletes customers from the database based on their selected ID.
+     * @param customerID the ID. */
+    public static void deleteCustomer(int customerID) {
+        try {
+            String sqldeletec = "DELETE FROM customers WHERE Customer_ID = ?";
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sqldeletec);
+            ps.setInt(1, customerID);
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
