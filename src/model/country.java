@@ -6,7 +6,7 @@ public class country {
     private int countryID;
     private String countryName;
 
-    /**Declaring constructor for the class*/
+    /**Declaring constructor for the class. */
     public country(int countryID, String countryName) {
         this.countryID = countryID;
         this.countryName = countryName;

@@ -95,9 +95,8 @@ public class loginController implements Initializable {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setContentText(Rb.getString("ErrorContent"));
                     alert.show();
+                    outputFile.println("Timestamp: " + LoginAttemptTimestamp + " Login Attempted By " + UserName);
                 }
-
-                outputFile.println("Timestamp: " + LoginAttemptTimestamp + " Login Attempted By " + UserName);
 
             }
             outputFile.close();

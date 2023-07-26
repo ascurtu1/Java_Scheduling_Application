@@ -1,17 +1,30 @@
 package controller;
 
+import dao.appointmentDatabase;
+import dao.customerDatabase;
 import helper.JDBC;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import model.appointment;
+import model.customer;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
+
+
+import static dao.appointmentDatabase.getAllAppointments;
+import static dao.customerDatabase.getAllCustomers;
 
 /** This class controls the logic for the application's home screen. */
 public class HomeController implements Initializable {
@@ -24,12 +37,12 @@ public class HomeController implements Initializable {
     public Label Customers_Lbl;
     public Label Appointments_Lbl;
     public Button Reports_Button;
+    public TableColumn CustomerPhoneColumn;
     public TableView CustomersTableView;
     public TableColumn CustomersIDColumn;
     public TableColumn CustomersNameColumn;
     public TableColumn CustomersAddressColumn;
     public TableColumn CustomersPostalColumn;
-    public TableColumn CustomersPhoneColumn;
     public TableColumn CustomersDivColumn;
     public TableView AppointmentsTableView;
     public TableColumn ApptIDColumn;
@@ -52,9 +65,40 @@ public class HomeController implements Initializable {
     public RadioButton AppointmentsViewAllRadio;
     public RadioButton AppointmentsViewMonthRadio;
     public RadioButton AppointmentsViewWeekRadio;
+    public appointment appointmentToDelete;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //Insert customer information pulled from database into Customers table.
+        try {
+            CustomersTableView.setItems(getAllCustomers());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        CustomersIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        CustomersNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        CustomersAddressColumn.setCellValueFactory(new PropertyValueFactory<>("customerAddress"));
+        CustomersPostalColumn.setCellValueFactory(new PropertyValueFactory<>("customerPostalCode"));
+        CustomerPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("customerPhoneNumber"));
+        CustomersDivColumn.setCellValueFactory(new PropertyValueFactory<>("customerDivID"));
+
+
+        //Insert appointment information pulled from database into Appointments table.
+        try {
+            AppointmentsTableView.setItems(getAllAppointments());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        ApptIDColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        ApptTitleColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
+        ApptDescColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentDesc"));
+        ApptLocationColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
+        ApptContactColumn.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        ApptTypeColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
+        ApptStartColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentStartDateTime"));
+        ApptEndColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentEndDateTime"));
+        ApptCustIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        ApptUserIDColumn.setCellValueFactory(new PropertyValueFactory<>("userID"));
 
     }
 
@@ -120,7 +164,23 @@ public class HomeController implements Initializable {
      *
      * @param actionEvent button click
      */
-    public void OnActionDeleteAppointment(ActionEvent actionEvent) {
+    public void OnActionDeleteAppointment(ActionEvent actionEvent) throws SQLException, IOException {
+        appointmentToDelete = (appointment) AppointmentsTableView.getSelectionModel().getSelectedItem();
+        if (appointmentToDelete == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("ERROR: No Appointment Selected");
+            alert.show();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("WARNING: Please confirm you would like to delete");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                appointmentDatabase.deleteAppointment(appointmentToDelete.getAppointmentID());
+                ObservableList appointmentList = appointmentDatabase.getAllAppointments();
+                AppointmentsTableView.setItems(appointmentList);
+                AppointmentsTableView.refresh();
+            }
+        }
     }
 
     /**
@@ -128,7 +188,7 @@ public class HomeController implements Initializable {
      *
      * @param actionEvent button click
      */
-    public void OnActionModifyAppointment(ActionEvent actionEvent) throws IOException {
+    public void OnActionModifyAppointment (ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/View/modifyAppointment.fxml"));
         Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 600, 720);
@@ -136,26 +196,26 @@ public class HomeController implements Initializable {
         stage.show();
     }
 
-        /** Allows the user to go to Add Appointment screen.
-         * @param actionEvent button click */
-        public void OnActionAddAppointment (ActionEvent actionEvent) throws IOException {
-            Parent root = FXMLLoader.load(getClass().getResource("/View/addAppointment.fxml"));
-            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 600, 720);
-            stage.setScene(scene);
-            stage.show();
-        }
-
-        /** Allows the user to view all appointments.
-         * @param actionEvent button click */
-        public void OnActionViewAll (ActionEvent actionEvent){
-        }
-        /** Allows the user to view appointments this month.
-         * @param actionEvent button click */
-        public void OnActionViewMonth (ActionEvent actionEvent){
-        }
-        /** Allows the user to view appointments this week.
-         * @param actionEvent button click */
-        public void OnActionViewWeek (ActionEvent actionEvent){
-        }
+    /** Allows the user to go to Add Appointment screen.
+     * @param actionEvent button click */
+    public void OnActionAddAppointment (ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/View/addAppointment.fxml"));
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root, 600, 720);
+        stage.setScene(scene);
+        stage.show();
     }
+
+    /** Allows the user to view all appointments.
+     * @param actionEvent button click */
+    public void OnActionViewAll (ActionEvent actionEvent){
+    }
+    /** Allows the user to view appointments this month.
+     * @param actionEvent button click */
+    public void OnActionViewMonth (ActionEvent actionEvent){
+    }
+    /** Allows the user to view appointments this week.
+     * @param actionEvent button click */
+    public void OnActionViewWeek (ActionEvent actionEvent){
+    }
+}
