@@ -33,7 +33,7 @@ public class divisionDatabase {
 
     public static ObservableList<division> getUSDivisions() throws SQLException {
         ObservableList<division> USDivisionList = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM first_level_division WHERE Country_ID = 1";
+        String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = 1";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
         ResultSet Rs = ps.executeQuery();
         while (Rs.next()) {
@@ -49,7 +49,7 @@ public class divisionDatabase {
 
     public static ObservableList<division> getUKDivisions() throws SQLException {
         ObservableList<division> UKDivisionList = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM first_level_division WHERE Country_ID = 2";
+        String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = 2";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
         ResultSet Rs = ps.executeQuery();
         while (Rs.next()) {
@@ -64,7 +64,7 @@ public class divisionDatabase {
 
     public static ObservableList<division> getCanadaDivision() throws SQLException {
         ObservableList<division> CanadaDivisionList = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM first_level_division WHERE Country_ID = 3";
+        String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = 3";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
         ResultSet Rs = ps.executeQuery();
         while (Rs.next()) {

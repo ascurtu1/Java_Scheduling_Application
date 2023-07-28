@@ -187,7 +187,6 @@ public class HomeController implements Initializable {
 
     /**
      * Allows the user to exit the application.
-     *
      * @param actionEvent button click
      */
     public void OnActionExit (ActionEvent actionEvent){

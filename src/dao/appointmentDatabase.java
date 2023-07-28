@@ -75,7 +75,6 @@ public class appointmentDatabase {
      */
 
     public static boolean checkAssociatedAppointment(int customerID) throws SQLException {
-        ObservableList<Integer> ListCustomerID = FXCollections.observableArrayList();
         try {
             String IDquery = "SELECT Customer_ID FROM appointments";
             PreparedStatement ps = JDBC.getConnection().prepareStatement(IDquery);

@@ -1,10 +1,14 @@
 package model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /** This creates the country class which is used to hold country information. */
 public class country {
 
     private int countryID;
     private String countryName;
+
 
     /**Declaring constructor for the class. */
     public country(int countryID, String countryName) {

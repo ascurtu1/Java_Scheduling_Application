@@ -45,16 +45,13 @@ public class AddCustomerController implements Initializable {
     public Button CustomerSaveBtn;
     public Button CustomerCancelBtn;
 
+    /**
+     * Populates the country combo box with the country options from the SQL database.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         try {
             AddCustomerCountryCombo.setItems(countryDatabase.getAllCountries());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            AddCustomerStateCombo.setItems(divisionDatabase.getAllDivisions());
         } catch (SQLException e) {
             e.printStackTrace();
 
@@ -63,27 +60,25 @@ public class AddCustomerController implements Initializable {
 
     /**
      * Allows the user to choose state from pre-populated combo box selection based on their country selection.
-     *
      * @param actionEvent selection
      */
     public void OnActionCustomerState(ActionEvent actionEvent) throws SQLException {
-        String SelectedCountry = String.valueOf(AddCustomerCountryCombo.getSelectionModel().getSelectedItem());
+        country SelectedCountry = AddCustomerCountryCombo.getSelectionModel().getSelectedItem();
 
-        if (SelectedCountry.equals("U.S")) {
-            ObservableList <division> selectionsUS = divisionDatabase.getUSDivisions();
-            AddCustomerStateCombo.setItems(selectionsUS);
-        } else if (SelectedCountry.equals("UK")) {
-            ObservableList<division> selectionsUK = divisionDatabase.getUKDivisions();
-            AddCustomerStateCombo.setItems(selectionsUK);
+        if ((SelectedCountry.getCountryID() == 1)) {
+            ObservableList<division> USDivisions = divisionDatabase.getUSDivisions();
+            AddCustomerStateCombo.setItems(USDivisions);
+        } else if ((SelectedCountry.getCountryID() == 2)) {
+            ObservableList<division> UKDivisions = divisionDatabase.getUKDivisions();
+            AddCustomerStateCombo.setItems(UKDivisions);
         } else {
-            ObservableList<division> selectionsCanada = divisionDatabase.getCanadaDivision();
-            AddCustomerStateCombo.setItems(selectionsCanada);
+            ObservableList<division> CanadaDivisions = divisionDatabase.getCanadaDivision();
+            AddCustomerStateCombo.setItems(CanadaDivisions);
         }
     }
 
         /**
          * Allows the user to save added customer information.
-         *
          * @param actionEvent button click
          */
         public void OnActionSaveCustomer (ActionEvent actionEvent){
@@ -92,11 +87,11 @@ public class AddCustomerController implements Initializable {
                 String address = AddCustomerAddressTxt.getText();
                 String phoneNumber = AddCustomerPhoneTxt.getText();
                 String postal = AddCustomerPostalTxt.getText();
-                int stateID = (AddCustomerStateCombo.getSelectionModel().getSelectedItem()).getDivisionID();
+                int stateID = AddCustomerStateCombo.getSelectionModel().getSelectedItem().getDivisionID();
 
 
-                if (name.isBlank() || address.isBlank() || phoneNumber.isBlank() || postal.isBlank() || (AddCustomerCountryCombo.getSelectionModel().getSelectedItem() == null) ||
-                        (AddCustomerStateCombo.getSelectionModel().getSelectedItem() == null)) {
+                if (name.isBlank() || address.isBlank() || phoneNumber.isBlank() || postal.isBlank() || (AddCustomerCountryCombo.getValue() == null) ||
+                        (AddCustomerStateCombo.getValue() == null)) {
                     Alert alert = new Alert(Alert.AlertType.WARNING, "Error: Fields are blank");
                     alert.show();
                 } else {
@@ -113,7 +108,6 @@ public class AddCustomerController implements Initializable {
             } catch (IOException | SQLException ioException) {
                 ioException.printStackTrace();
             }
-
 
         }
 
