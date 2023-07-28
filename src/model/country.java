@@ -12,6 +12,12 @@ public class country {
         this.countryName = countryName;
     }
 
+    public String toString() {
+        return (countryName);
+    }
+
+
+
     /**
      * @return country's ID;
      */

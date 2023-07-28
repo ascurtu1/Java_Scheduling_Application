@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import model.appointment;
 
 import java.io.IOException;
 import java.net.URL;
@@ -71,5 +72,22 @@ public class ModifyAppointmentController implements Initializable {
             stage.setScene(scene);
             stage.show();
         }
+    }
+
+    public void populateAppointment(appointment appointment) {
+        ModifyAppointmentTxt.setText(String.valueOf(appointment.getAppointmentID()));
+        ModifyTitleTxt.setText(appointment.getAppointmentTitle());
+        ModifyDescriptionTxt.setText(appointment.getAppointmentDesc());
+        ModifyLocationTxt.setText(appointment.getAppointmentLocation());
+        ModifyContactCombo.setValue(appointment.getContact());
+        ModifyTypeTxt.setText(appointment.getAppointmentType());
+        ModifyStartDatePicker.setValue(appointment.getAppointmentStartDateTime().toLocalDate());
+        ModifyStartTimeCombo.setValue(appointment.getAppointmentStartDateTime().toLocalTime());
+        ModifyEndDatePicker.setValue(appointment.getAppointmentEndDateTime().toLocalDate());
+        ModifyEndTimeCombo.setValue(appointment.getAppointmentEndDateTime().toLocalTime());
+        ModifyCustIDTxt.setText(String.valueOf(appointment.getCustomerID()));
+        ModifyUserIDTxt.setText(String.valueOf(appointment.getCustomerID()));
+//will need to update later for combos
+
     }
 }

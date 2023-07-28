@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import model.customer;
 
 import java.io.IOException;
 import java.net.URL;
@@ -66,5 +67,20 @@ public class ModifyCustomerController implements Initializable {
             stage.setScene(scene);
             stage.show();
         }
+    }
+
+    /**Populates the textfields and combo boxes in the form with the information from the main screen and database. */
+
+    public void populateCustomer (customer customer) {
+        ModifyCustomerIDTxt.setText(String.valueOf(customer.getCustomerID()));
+        ModifyCustomerNameTxt.setText(customer.getCustomerName());
+        ModifyCustomerAddressTxt.setText(customer.getCustomerAddress());
+        ModifyCustomerPhoneTxt.setText(customer.getCustomerPhoneNumber());
+        ModifyCustomerCountryCombo.setValue(customer.getCustomerCountryName());
+        ModifyCustomerStateCombo.setValue(customer.getCustomerDivisionName());
+        ModifyCustomerCodeTxt.setText(customer.getCustomerPostalCode());
+
+        //need to do combo boxes
+
     }
 }

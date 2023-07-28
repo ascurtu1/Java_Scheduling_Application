@@ -84,21 +84,23 @@ public class loginController implements Initializable {
         for (user UserLoggingIn : userLogIn) {
             if (UserName.equals(UserLoggingIn.getUserName()) && password.equals(UserLoggingIn.getPassword())) {
                 LoginSuccess = true;
-                Parent root = FXMLLoader.load(getClass().getResource("/View/home.fxml"));
-                Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-                Scene scene = new Scene(root, 1080, 720);
-                stage.setScene(scene);
-                stage.show();
-                outputFile.println("Timestamp: " + LoginAttemptTimestamp + "Login Attempt Successful By " + UserName);
-            } else if (!LoginSuccess) {
-                    ResourceBundle Rb = ResourceBundle.getBundle("Language/Language", Locale.getDefault());
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText(Rb.getString("ErrorContent"));
-                    alert.show();
-                    outputFile.println("Timestamp: " + LoginAttemptTimestamp + " Login Attempted By " + UserName);
+                break;
                 }
-
             }
+        if (LoginSuccess) {
+            Parent root = FXMLLoader.load(getClass().getResource("/View/home.fxml"));
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 1080, 720);
+            stage.setScene(scene);
+            stage.show();
+            outputFile.println("Timestamp: " + LoginAttemptTimestamp + "Login Attempt Successful By " + UserName);
+        } else if (!LoginSuccess) {
+            ResourceBundle Rb = ResourceBundle.getBundle("Language/Language", Locale.getDefault());
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(Rb.getString("ErrorContent"));
+            alert.show();
+            outputFile.println("Timestamp: " + LoginAttemptTimestamp + " Login Attempted By " + UserName);
+        }
             outputFile.close();
         }
 

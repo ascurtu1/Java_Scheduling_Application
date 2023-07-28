@@ -7,6 +7,11 @@ public class division {
     private String divisionName;
     private int countryID;
 
+
+    public String toString() {
+        return (divisionName);
+    }
+
     /**
      * @return division's ID;
      */

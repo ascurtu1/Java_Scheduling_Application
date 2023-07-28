@@ -58,4 +58,26 @@ public class customerDatabase {
         }
     }
 
+    /** This method adds customers to the database.
+     * @param name
+     * @param address
+     * @param phoneNumber
+     * @param postal
+     * @param stateID
+     * */
+    public static void addCustomer(String name, String address, String postal, String phoneNumber, int stateID) throws SQLException {
+
+        String sql = "INSERT INTO CUSTOMERS (Customer_Name, Address, Postal_Code, Phone, Division_ID) VALUES(?, ?, ?, ?, ?)";
+        PreparedStatement psti = JDBC.getConnection().prepareStatement(sql);
+        psti.setString(1, name);
+        psti.setString(2, address);
+        psti.setString(3, postal);
+        psti.setString(4, phoneNumber);
+        psti.setInt(5, stateID);
+
+        psti.execute();
+    }
 }
+
+
+

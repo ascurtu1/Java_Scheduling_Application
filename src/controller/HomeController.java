@@ -139,11 +139,22 @@ public class HomeController implements Initializable {
      * @param actionEvent button click
      */
     public void OnActionModifyCustomer(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/View/modifyCustomer.fxml"));
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root, 600, 720);
-        stage.setScene(scene);
-        stage.show();
+        customer customerToModify = (customer) CustomersTableView.getSelectionModel().getSelectedItem();
+        if (customerToModify == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("ERROR: No Customer Selected");
+            alert.show();
+        } else {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/View/modifyCustomer.fxml"));
+            loader.load();
+            ModifyCustomerController customerModify = loader.getController();
+            customerModify.populateCustomer((customer) CustomersTableView.getSelectionModel().getSelectedItem());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            Parent scene = loader.getRoot();
+            stage.setScene(new Scene(scene));
+            stage.show();
+        }
     }
 
     /**
@@ -212,11 +223,22 @@ public class HomeController implements Initializable {
      * @param actionEvent button click
      */
     public void OnActionModifyAppointment (ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/View/modifyAppointment.fxml"));
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root, 600, 720);
-        stage.setScene(scene);
-        stage.show();
+        appointment appointmentToModify = (appointment) AppointmentsTableView.getSelectionModel().getSelectedItem();
+        if (appointmentToModify == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("ERROR: No Appointment Selected");
+            alert.show();
+        } else {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/View/modifyAppointment.fxml"));
+            loader.load();
+            ModifyAppointmentController apptModify = loader.getController();
+            apptModify.populateAppointment((appointment) AppointmentsTableView.getSelectionModel().getSelectedItem());
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            Parent scene = loader.getRoot();
+            stage.setScene(new Scene(scene));
+            stage.show();
+        }
     }
 
     /** Allows the user to go to Add Appointment screen.

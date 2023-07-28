@@ -13,6 +13,11 @@ public class customer {
     private String customerDivisionName;
 
 
+    public String toString() {
+        return "[" + customerID + "] " + customerName;
+    }
+
+
     /**
      * @return customer's name;
      */

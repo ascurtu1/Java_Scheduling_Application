@@ -1,5 +1,9 @@
 package controller;
 
+import dao.countryDatabase;
+import dao.customerDatabase;
+import dao.divisionDatabase;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -7,9 +11,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import main.Main;
+import model.country;
+import model.division;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -31,8 +39,8 @@ public class AddCustomerController implements Initializable {
     public TextField AddCustomerNameTxt;
     public TextField AddCustomerAddressTxt;
     public TextField AddCustomerPhoneTxt;
-    public ComboBox<String> AddCustomerCountryCombo;
-    public ComboBox<String> AddCustomerStateCombo;
+    public ComboBox<country> AddCustomerCountryCombo;
+    public ComboBox<division> AddCustomerStateCombo;
     public TextField AddCustomerPostalTxt;
     public Button CustomerSaveBtn;
     public Button CustomerCancelBtn;
@@ -40,39 +48,92 @@ public class AddCustomerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        try {
+            AddCustomerCountryCombo.setItems(countryDatabase.getAllCountries());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            AddCustomerStateCombo.setItems(divisionDatabase.getAllDivisions());
+        } catch (SQLException e) {
+            e.printStackTrace();
+
     }
+}
 
     /**
      * Allows the user to choose state from pre-populated combo box selection based on their country selection.
      *
      * @param actionEvent selection
      */
-    public void OnActionCustomerState(ActionEvent actionEvent) {
-    }
+    public void OnActionCustomerState(ActionEvent actionEvent) throws SQLException {
+        String SelectedCountry = String.valueOf(AddCustomerCountryCombo.getSelectionModel().getSelectedItem());
 
-    /**
-     * Allows the user to save added customer information.
-     *
-     * @param actionEvent button click
-     */
-    public void OnActionSaveCustomer(ActionEvent actionEvent) {
-    }
-
-    /**
-     * Allows the user to cancel added appointment information and return to Main screen.
-     *
-     * @param actionEvent button click
-     */
-    public void OnActionCancelAddCustomer(ActionEvent actionEvent) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will cancel any changes. Please confirm to proceed.");
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            Parent root = FXMLLoader.load(getClass().getResource("/View/home.fxml"));
-            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 1080, 720);
-            stage.setScene(scene);
-            stage.show();
+        if (SelectedCountry.equals("U.S")) {
+            ObservableList <division> selectionsUS = divisionDatabase.getUSDivisions();
+            AddCustomerStateCombo.setItems(selectionsUS);
+        } else if (SelectedCountry.equals("UK")) {
+            ObservableList<division> selectionsUK = divisionDatabase.getUKDivisions();
+            AddCustomerStateCombo.setItems(selectionsUK);
+        } else {
+            ObservableList<division> selectionsCanada = divisionDatabase.getCanadaDivision();
+            AddCustomerStateCombo.setItems(selectionsCanada);
         }
     }
-}
+
+        /**
+         * Allows the user to save added customer information.
+         *
+         * @param actionEvent button click
+         */
+        public void OnActionSaveCustomer (ActionEvent actionEvent){
+            try {
+                String name = AddCustomerNameTxt.getText();
+                String address = AddCustomerAddressTxt.getText();
+                String phoneNumber = AddCustomerPhoneTxt.getText();
+                String postal = AddCustomerPostalTxt.getText();
+                int stateID = (AddCustomerStateCombo.getSelectionModel().getSelectedItem()).getDivisionID();
+
+
+                if (name.isBlank() || address.isBlank() || phoneNumber.isBlank() || postal.isBlank() || (AddCustomerCountryCombo.getSelectionModel().getSelectedItem() == null) ||
+                        (AddCustomerStateCombo.getSelectionModel().getSelectedItem() == null)) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Error: Fields are blank");
+                    alert.show();
+                } else {
+                    customerDatabase.addCustomer(name, address, phoneNumber, postal, stateID);
+                    Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+                    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/home.fxml"));
+                    Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
+                    stage.setTitle("Scheduling Application");
+                    stage.setScene(scene);
+                    stage.show();
+
+                }
+
+            } catch (IOException | SQLException ioException) {
+                ioException.printStackTrace();
+            }
+
+
+        }
+
+
+        /**
+         * Allows the user to cancel added appointment information and return to Main screen.
+         *
+         * @param actionEvent button click
+         */
+        public void OnActionCancelAddCustomer (ActionEvent actionEvent) throws IOException {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will cancel any changes. Please confirm to proceed.");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Parent root = FXMLLoader.load(getClass().getResource("/View/home.fxml"));
+                Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+                Scene scene = new Scene(root, 1080, 720);
+                stage.setScene(scene);
+                stage.show();
+            }
+        }
+    }
+
