@@ -138,7 +138,7 @@ public class HomeController implements Initializable {
      *
      * @param actionEvent button click
      */
-    public void OnActionModifyCustomer(ActionEvent actionEvent) throws IOException {
+    public void OnActionModifyCustomer(ActionEvent actionEvent) throws IOException, SQLException {
         customer customerToModify = (customer) CustomersTableView.getSelectionModel().getSelectedItem();
         if (customerToModify == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

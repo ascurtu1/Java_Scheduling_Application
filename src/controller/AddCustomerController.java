@@ -90,12 +90,12 @@ public class AddCustomerController implements Initializable {
                 int stateID = AddCustomerStateCombo.getSelectionModel().getSelectedItem().getDivisionID();
 
 
-                if (name.isBlank() || address.isBlank() || phoneNumber.isBlank() || postal.isBlank() || (AddCustomerCountryCombo.getValue() == null) ||
+                if (name.isEmpty() || address.isEmpty() || phoneNumber.isEmpty() || postal.isEmpty() || (AddCustomerCountryCombo.getValue() == null) ||
                         (AddCustomerStateCombo.getValue() == null)) {
                     Alert alert = new Alert(Alert.AlertType.WARNING, "Error: Fields are blank");
                     alert.show();
                 } else {
-                    customerDatabase.addCustomer(name, address, phoneNumber, postal, stateID);
+                    customerDatabase.addCustomer(name, address, postal,phoneNumber , stateID);
                     Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
                     FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/home.fxml"));
                     Scene scene = new Scene(fxmlLoader.load(), 1080, 720);

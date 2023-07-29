@@ -87,7 +87,7 @@ public class ModifyAppointmentController implements Initializable {
         ModifyEndTimeCombo.setValue(appointment.getAppointmentEndDateTime().toLocalTime());
         ModifyCustIDTxt.setText(String.valueOf(appointment.getCustomerID()));
         ModifyUserIDTxt.setText(String.valueOf(appointment.getCustomerID()));
-//will need to update later for combos
+
 
     }
 }

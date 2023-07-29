@@ -33,8 +33,8 @@
                 <TextField fx:id="ModifyCustomerNameTxt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <TextField fx:id="ModifyCustomerAddressTxt" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <TextField fx:id="ModifyCustomerPhoneTxt" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                <ComboBox fx:id="ModifyCustomerCountryCombo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                <ComboBox fx:id="ModifyCustomerStateCombo" onAction="#OnActionCustomerState" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                <ComboBox fx:id="ModifyCustomerCountryCombo" onAction="#OnActionCustomerState" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <ComboBox fx:id="ModifyCustomerStateCombo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                 <TextField fx:id="ModifyCustomerCodeTxt" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             </children>
         </GridPane>

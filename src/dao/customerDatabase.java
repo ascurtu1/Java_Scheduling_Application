@@ -77,6 +77,26 @@ public class customerDatabase {
 
         psti.execute();
     }
+
+
+    public static void updateCustomer (int customerID, String customerName, String customerAddress, String customerPostalCode, String customerPhoneNumber, int customerDivID) throws SQLException {
+        try {
+            String sql = "UPDATE CUSTOMERS set Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Division_ID = ? WHERE CUSTOMER_ID = ?";
+            PreparedStatement pst = JDBC.getConnection().prepareStatement(sql);
+            pst.setString(1, customerName);
+            pst.setString(2, customerAddress);
+            pst.setString(3, customerPostalCode);
+            pst.setString(4, customerPhoneNumber);
+            pst.setInt(5, customerDivID);
+            pst.setInt(6, customerID);
+
+            pst.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
 

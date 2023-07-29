@@ -4,7 +4,7 @@ import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.division;
-import model.user;
+
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
