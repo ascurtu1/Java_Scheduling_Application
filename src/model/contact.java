@@ -6,6 +6,9 @@ public class contact {
     private String contactName;
     private String contactEmail;
 
+    public String toString() {
+        return (contactName);
+    }
 
     /**Declaring constructor for the class. */
     public contact(int contactID, String contactName, String contactEmail) {
@@ -13,6 +16,8 @@ public class contact {
         this.contactName = contactName;
         this.contactEmail = contactEmail;
     }
+
+
     /**
      * @return contact's ID;
      */

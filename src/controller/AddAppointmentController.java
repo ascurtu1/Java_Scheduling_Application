@@ -1,5 +1,6 @@
 package controller;
 
+import dao.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -8,14 +9,24 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import main.Main;
+import model.contact;
+import model.customer;
+import model.user;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 /** This class controls the logic to add appointments in the application. */
 public class AddAppointmentController implements Initializable {
+
 
 
     Stage stage;
@@ -41,24 +52,45 @@ public class AddAppointmentController implements Initializable {
     public TextField AddApptTitleTxt;
     public TextField AddApptDescriptionTxt;
     public TextField ApptLocationTxt;
-    public ComboBox<String> ApptContactCombo;
+    public ComboBox<contact> ApptContactCombo;
     public TextField ApptTypeTxt;
     public DatePicker AptStartDatePicker;
-    public ComboBox<String> AptStartTimeCombo;
+    public ComboBox<LocalTime> AptStartTimeCombo;
     public DatePicker AptEndDatePicker;
-    public ComboBox AptEndTimeCombo;
+    public ComboBox <LocalTime>AptEndTimeCombo;
     public TextField AptCustIDTxt;
     public Label AptUserIDLbl;
+    public ComboBox <customer> CustIDComboBox;
+    public ComboBox <user> UserIDComboBox;
 
-
-
-    //User lambadas here for start date/end date and for start/end time
 
 
 
     @Override
-    //code in initialize to use lambdas to add info to contact, start and end time combo box
+
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            ApptContactCombo.setItems(contactDatabase.getAllContacts());
+            CustIDComboBox.setItems(customerDatabase.getAllCustomers());
+            UserIDComboBox.setItems(userDatabase.getAllUsers());
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        LocalTime start = LocalTime.of(0, 0);
+        LocalTime end = LocalTime.of(23, 0);
+        while(start.isBefore(end.plusSeconds(1))){
+            AptStartTimeCombo.getItems().add(start);
+            start = start.plusMinutes(10);
+        }
+        end = LocalTime.of(0, 0);
+        while(end.isBefore(LocalTime.of(23, 50))){
+            AptEndTimeCombo.getItems().add(end);
+            end = end.plusMinutes(10);
+        }
+        AptStartTimeCombo.getSelectionModel().select(LocalTime.of(8, 0));
+        AptEndTimeCombo.getSelectionModel().select(LocalTime.of(9, 0));
 
     }
 
@@ -67,7 +99,39 @@ public class AddAppointmentController implements Initializable {
      *
      * @param actionEvent button click
      */
-    public void OnActionSaveAppointment(ActionEvent actionEvent) {
+    public void OnActionSaveAppointment(ActionEvent actionEvent) throws SQLException, IOException {
+
+        String title = AddApptTitleTxt.getText();
+        String description = AddApptDescriptionTxt.getText();
+        String location = ApptLocationTxt.getText();
+        contact contact = ApptContactCombo.getValue();
+        String type = ApptTypeTxt.getText();
+        int contactID = ApptContactCombo.getValue().getContactID();
+        int customerID = CustIDComboBox.getValue().getCustomerID();
+        int userID = UserIDComboBox.getValue().getUserID();
+
+        LocalTime startTime = AptStartTimeCombo.getValue();
+        LocalDate startDate = AptStartDatePicker.getValue();
+
+        LocalTime endTime = AptEndTimeCombo.getValue();
+        LocalDate endDate = AptEndDatePicker.getValue();
+
+        LocalDateTime appointmentStart = LocalDateTime.of(startDate, startTime);
+        LocalDateTime appointmentEnd = LocalDateTime.of(endDate, endTime);
+
+        if (title.isEmpty() || description.isEmpty() || location.isEmpty()  || type.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Error: Fields are blank");
+            alert.show();
+        } else {
+            appointmentDatabase.addAppointment(title, description, location, type, appointmentStart, appointmentEnd, customerID, userID, contactID);
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/home.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
+            stage.setTitle("Scheduling Application");
+            stage.setScene(scene);
+            stage.show();
+
+        }
     }
 
     /**

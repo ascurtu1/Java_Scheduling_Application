@@ -19,6 +19,7 @@ import model.customer;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -104,6 +105,7 @@ public class HomeController implements Initializable {
         ApptEndColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentEndDateTime"));
         ApptCustIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         ApptUserIDColumn.setCellValueFactory(new PropertyValueFactory<>("userID"));
+
 
     }
 
@@ -213,6 +215,9 @@ public class HomeController implements Initializable {
                 appointmentDatabase.deleteAppointment(appointmentToDelete.getAppointmentID());
                 AppointmentsTableView.setItems(getAllAppointments());
             }
+            Alert alert2 = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Appointment ID: " + appointmentToDelete.getAppointmentID() + " with type: " + appointmentToDelete.getAppointmentType() + " was deleted.");
+            alert.show();
         }
     }
 

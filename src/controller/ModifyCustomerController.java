@@ -146,7 +146,7 @@ public class ModifyCustomerController implements Initializable {
 
     public void populateCustomer(customer customer) throws SQLException {
 
-        //ModifyCustomerStateCombo.setValue(customer.getCustomerDivisionName());
+
 
         ObservableList<country> ModifyCustomerCountryList = countryDatabase.getAllCountries();
         ObservableList<division> ModifyCustomerStateList = divisionDatabase.getAllDivisions();

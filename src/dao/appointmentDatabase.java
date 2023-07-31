@@ -4,11 +4,12 @@ import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.appointment;
-import model.customer;
+
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 
@@ -92,6 +93,39 @@ public class appointmentDatabase {
             }
         return false;
     }
+
+
+
+
+    /** This method adds appointment information to the database.
+     * @param title
+     * @param description
+     * @param location
+     * @param type
+     * @param appointmentStart
+     * @param appointmentEnd
+     * @param customerID
+     * @param userID
+     * @param contactID
+     * */
+
+
+    public static void addAppointment (String title, String description, String location, String type,LocalDateTime appointmentStart, LocalDateTime appointmentEnd, int customerID, int userID, int contactID) throws SQLException {
+
+        String sql = "INSERT INTO APPOINTMENTS (Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement psti = JDBC.getConnection().prepareStatement(sql);
+        psti.setString(1, title);
+        psti.setString(2, description);
+        psti.setString(3, location);
+        psti.setString(4, type);
+        psti.setTimestamp(5, Timestamp.valueOf(appointmentStart));
+        psti.setTimestamp(6, Timestamp.valueOf(appointmentEnd));
+        psti.setInt(7, customerID);
+        psti.setInt(8, userID);
+        psti.setInt(9, contactID);
+        psti.execute();
+    }
+
 }
 
 

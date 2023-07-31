@@ -13,6 +13,10 @@ public class user {
         this.password = password;
     }
 
+    public String toString() {
+        return "[" + userID + "] " + userName;
+    }
+
     /**
      * @return userID;
      */

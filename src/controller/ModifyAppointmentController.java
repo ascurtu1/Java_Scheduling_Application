@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 public class ModifyAppointmentController implements Initializable {
 
 
+
     Stage stage;
     Parent scene;
 
@@ -50,6 +51,8 @@ public class ModifyAppointmentController implements Initializable {
     public TextField ModifyUserIDTxt;
     public Button SaveModifyAppointmentBtn;
     public Button CancelModifyAppointmentBtn;
+    public ComboBox CustomerIDComboBox;
+    public ComboBox UserIDComboBox;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -85,8 +88,8 @@ public class ModifyAppointmentController implements Initializable {
         ModifyStartTimeCombo.setValue(appointment.getAppointmentStartDateTime().toLocalTime());
         ModifyEndDatePicker.setValue(appointment.getAppointmentEndDateTime().toLocalDate());
         ModifyEndTimeCombo.setValue(appointment.getAppointmentEndDateTime().toLocalTime());
-        ModifyCustIDTxt.setText(String.valueOf(appointment.getCustomerID()));
-        ModifyUserIDTxt.setText(String.valueOf(appointment.getCustomerID()));
+        CustomerIDComboBox.setValue(appointment.getCustomerID());
+        UserIDComboBox.setValue(appointment.getUserID());
 
 
     }

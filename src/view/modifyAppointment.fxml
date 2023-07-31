@@ -59,9 +59,9 @@
                     </GridPane.margin></Label>
                 <ComboBox fx:id="ModifyEndTimeCombo" layoutX="393.0" layoutY="299.0" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="7" />
                 <Label fx:id="ModifyCustIDLbl" layoutX="30.0" layoutY="349.0" text="Customer ID" GridPane.rowIndex="8" />
-                <TextField fx:id="ModifyCustIDTxt" editable="false" layoutX="151.0" layoutY="20.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                 <Label fx:id="ModifyUserIDLbl" layoutX="30.0" layoutY="361.0" text="User ID" GridPane.rowIndex="9" />
-                <TextField fx:id="ModifyUserIDTxt" editable="false" layoutX="151.0" layoutY="357.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <ComboBox fx:id="CustomerIDComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <ComboBox fx:id="UserIDComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
             </children>
             <GridPane.margin>
                 <Insets />
