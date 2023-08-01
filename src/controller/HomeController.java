@@ -226,7 +226,7 @@ public class HomeController implements Initializable {
      *
      * @param actionEvent button click
      */
-    public void OnActionModifyAppointment (ActionEvent actionEvent) throws IOException {
+    public void OnActionModifyAppointment (ActionEvent actionEvent) throws IOException, SQLException {
         appointment appointmentToModify = (appointment) AppointmentsTableView.getSelectionModel().getSelectedItem();
         if (appointmentToModify == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

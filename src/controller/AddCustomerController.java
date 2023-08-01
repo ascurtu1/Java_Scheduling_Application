@@ -105,8 +105,14 @@ public class AddCustomerController implements Initializable {
 
                 }
 
-            } catch (IOException | SQLException ioException) {
-                ioException.printStackTrace();
+            } catch (NullPointerException e) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Error: No fields may be left blank");
+                alert.show();
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }

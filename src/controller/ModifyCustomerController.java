@@ -117,6 +117,9 @@ public class ModifyCustomerController implements Initializable {
 
             }
 
+        } catch (NullPointerException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Error: No fields may be left blank");
+            alert.show();
         } catch (IOException | SQLException ioException) {
             ioException.printStackTrace();
         }
