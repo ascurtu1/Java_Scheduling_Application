@@ -149,8 +149,6 @@ public class ModifyCustomerController implements Initializable {
 
     public void populateCustomer(customer customer) throws SQLException {
 
-
-
         ObservableList<country> ModifyCustomerCountryList = countryDatabase.getAllCountries();
         ObservableList<division> ModifyCustomerStateList = divisionDatabase.getAllDivisions();
         ObservableList<division> StateSelected = FXCollections.observableArrayList();

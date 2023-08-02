@@ -69,7 +69,7 @@ public class HomeController implements Initializable {
     public RadioButton AppointmentsViewWeekRadio;
     public appointment appointmentToDelete;
     public customer customerToDelete;
-    private ObservableList<appointment> AppointmentList;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

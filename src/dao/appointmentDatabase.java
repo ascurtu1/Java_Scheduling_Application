@@ -4,6 +4,7 @@ import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.appointment;
+import model.customer;
 
 
 import java.sql.PreparedStatement;
@@ -11,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 
 /** This class is used for SQL statements to access the appointments database table. */
@@ -109,7 +111,6 @@ public class appointmentDatabase {
      * @param contactID
      * */
 
-
     public static void addAppointment (String title, String description, String location, String type,LocalDateTime appointmentStart, LocalDateTime appointmentEnd, int customerID, int userID, int contactID) throws SQLException {
 
         String sql = "INSERT INTO APPOINTMENTS (Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -125,6 +126,75 @@ public class appointmentDatabase {
         psti.setInt(9, contactID);
         psti.execute();
     }
+
+    /** This method creates a list of all appointment information related to each contact ID. This is used in the reports controller.
+     * @param ContactID the contact's ID.
+     * @return appointmentListByContactID. */
+    public static ObservableList<appointment> getAllAppointmentsByContactID(int ContactID) throws SQLException {
+
+        ObservableList<appointment> appointmentListByContactID = FXCollections.observableArrayList();
+        try {
+            String sql = "SELECT appointments.Appointment_ID, appointments.Title, appointments.Type, appointments.Description, appointments.Start, appointments.End, appointments.Customer_ID, appointments.Contact_ID, contacts.Contact_Name FROM appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID WHERE appointments.Contact_ID  = '" + ContactID + "';";
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            ResultSet Rs = ps.executeQuery();
+            while (Rs.next()) {
+                int appointmentID = Rs.getInt("Appointment_ID");
+                String appointmentTitle = Rs.getString("Title");
+                String appointmentType = Rs.getString("Type");
+                String appointmentDesc = Rs.getString("Description");
+                LocalDateTime appointmentStartDateTime = Rs.getTimestamp("Start").toLocalDateTime();
+                LocalDateTime appointmentEndDateTime = Rs.getTimestamp("End").toLocalDateTime();
+                int customerID = Rs.getInt("Customer_ID");
+
+
+                appointment newAppointment = new appointment(appointmentID, appointmentTitle, appointmentDesc, appointmentType, appointmentStartDateTime, appointmentEndDateTime, customerID);
+                appointmentListByContactID.add(newAppointment);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return appointmentListByContactID;
+
+    }
+
+
+    /** This method creates a list of all appointments by month. This is used in the reports controller.
+     * @return appointmentListByMonth. */
+    public static ObservableList<appointment> getAppointmentsByTypeMonth() throws SQLException {
+
+        ObservableList<appointment> appointmentListByTypeMonth = FXCollections.observableArrayList();
+        try {
+            String sql = "SELECT appointments.Type, DATE_FORMAT(Start, '%M') AS StartMonth, COUNT(*) FROM appointments GROUP BY StartMonth, type;";
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            ResultSet Rs = ps.executeQuery();
+            while (Rs.next()) {
+                String appointmentType = Rs.getString("Type");
+                String aptMonth = Rs.getString("StartMonth");
+                int aptCount = Rs.getInt("COUNT(*)");
+
+                appointment typeMonthAppointment = new appointment(appointmentType, aptMonth, aptCount);
+                appointmentListByTypeMonth.add(typeMonthAppointment);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return appointmentListByTypeMonth;
+
+    }
+
+
+
+
+
+
+
+
+
+
 
 }
 

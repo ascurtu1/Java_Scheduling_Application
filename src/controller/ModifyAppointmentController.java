@@ -66,6 +66,8 @@ public class ModifyAppointmentController implements Initializable {
     private user newUser;
     private contact newContact;
 
+
+    /** Populates the start/end times, contact, customer ID, and User ID combo boxes with data from the database. */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {

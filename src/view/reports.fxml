@@ -13,7 +13,7 @@
       </Label>
       <TableView fx:id="TypeAndMonthTableview" layoutX="44.0" layoutY="94.0" prefHeight="200.0" prefWidth="467.0">
         <columns>
-          <TableColumn prefWidth="173.19997787475586" text="Appointment Type" />
+          <TableColumn fx:id="AppointmentTypeColumn" prefWidth="173.19997787475586" text="Appointment Type" />
           <TableColumn fx:id="AppointmentMonthColumn" prefWidth="166.00001525878906" text="Appointment Month" />
             <TableColumn fx:id="AppointmentTotalColumn" prefWidth="129.199951171875" text="Appointment Total" />
         </columns>

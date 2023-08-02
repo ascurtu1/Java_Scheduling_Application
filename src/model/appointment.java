@@ -17,9 +17,11 @@ public class appointment {
     private int userID;
     private int contactID;
     private String contact;
+    private String aptMonth;
+    private int aptCount;
 
 
-    /**Declaring constructor for the class. */
+    /**Declaring constructor for the class and creating overloaded constructor to be able to create a different object that holds limited data for reports. */
 
     public appointment(int appointmentID, String appointmentTitle, String appointmentDesc, String appointmentLocation, String appointmentType, LocalDateTime appointmentStartDateTime, LocalDateTime appointmentEndDateTime, int customerID, int userID, int contactID, String contact) {
         this.appointmentID = appointmentID;
@@ -34,6 +36,41 @@ public class appointment {
         this.contactID = contactID;
         this.contact = contact;
     }
+
+    public appointment(int appointmentID, String appointmentTitle, String appointmentDesc, String appointmentType, LocalDateTime appointmentStartDateTime, LocalDateTime appointmentEndDateTime, int customerID) {
+        this.appointmentID = appointmentID;
+        this.appointmentTitle = appointmentTitle;
+        this.appointmentDesc = appointmentDesc;
+        this.appointmentType = appointmentType;
+        this.appointmentStartDateTime = appointmentStartDateTime;
+        this.appointmentEndDateTime = appointmentEndDateTime;
+        this.customerID = customerID;
+
+    }
+
+    public appointment(String appointmentType, String aptMonth, int aptCount) {
+        this.appointmentType = appointmentType;
+        this.aptMonth = aptMonth;
+        this.aptCount = aptCount;
+
+    }
+
+    public String getAptMonth() {
+        return aptMonth;
+    }
+
+    public void setAptMonth(String aptMonth) {
+        this.aptMonth = aptMonth;
+    }
+
+    public int getAptCount() {
+        return aptCount;
+    }
+
+    public void setAptCount(int aptCount) {
+        this.aptCount = aptCount;
+    }
+
     /**
      * @return appointmentID;
      */
