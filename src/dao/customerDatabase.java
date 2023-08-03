@@ -4,7 +4,7 @@ import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.customer;
-import model.user;
+
 
 
 import java.sql.PreparedStatement;
@@ -78,13 +78,13 @@ public class customerDatabase {
         psti.execute();
     }
 
-/** This method updates the customer list in the database.
- * @param customerID
- * @param customerName
- * @param customerAddress
- * @param customerPostalCode
- * @param customerPhoneNumber
- * @param customerDivID */
+    /** This method updates the customer list in the database.
+    * @param customerID
+    * @param customerName
+    * @param customerAddress
+    * @param customerPostalCode
+    * @param customerPhoneNumber
+    * @param customerDivID */
     public static void updateCustomer (int customerID, String customerName, String customerAddress, String customerPostalCode, String customerPhoneNumber, int customerDivID) throws SQLException {
         try {
             String sql = "UPDATE CUSTOMERS set Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Division_ID = ? WHERE CUSTOMER_ID = ?";

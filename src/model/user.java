@@ -1,12 +1,12 @@
 package model;
 
-/** This creates the user class which is used to login to the application. */
+/** This creates the model user class. */
 public class user {
     private int userID;
     private String userName;
     private String password;
 
-/**Declaring constructor for the class*/
+/**Declaring constructor for the class. */
     public user (int userID, String userName, String password) {
         this.userID = userID;
         this.userName = userName;

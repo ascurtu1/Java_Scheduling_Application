@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class userDatabase {
 
     /** This method creates a list of all users and their information.
-     * @return list of all users and their information from the MySQL database. */
+     * @return userList list of all users and their information from the MySQL database. */
     public static ObservableList<user> getAllUsers () throws SQLException {
         ObservableList<user> userList = FXCollections.observableArrayList();
         String sql = "SELECT * FROM users";
@@ -27,7 +27,6 @@ public class userDatabase {
                 userList.add(newUser);
             }
             return userList;
-
         }
     }
 

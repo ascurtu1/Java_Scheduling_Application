@@ -1,7 +1,7 @@
 package model;
 
 
-/** This creates the customer class which is used to hold country information. */
+/** This creates the model customer class. */
 public class customer {
     private String customerName;
     private int customerID;
@@ -11,6 +11,19 @@ public class customer {
     private int customerDivID;
     private String customerCountryName;
     private String customerDivisionName;
+
+    /**Declaring constructor for the class. */
+    public customer(String customerName, int customerID, String customerAddress, String customerPostalCode, String customerPhoneNumber, int customerDivID, String customerCountryName, String customerDivisionName) {
+
+        this.customerName = customerName;
+        this.customerID = customerID;
+        this.customerAddress = customerAddress;
+        this.customerPostalCode = customerPostalCode;
+        this.customerPhoneNumber = customerPhoneNumber;
+        this.customerDivID = customerDivID;
+        this.customerCountryName = customerCountryName;
+        this.customerDivisionName = customerDivisionName;
+    }
 
 
     public String toString() {
@@ -115,25 +128,5 @@ public class customer {
         this.customerDivisionName = customerDivisionName;
     }
 
-    /**Declaring constructor for the class. */
-
-    public customer(String customerName, int customerID, String customerAddress, String customerPostalCode, String customerPhoneNumber, int customerDivID, String customerCountryName, String customerDivisionName) {
-
-        this.customerName = customerName;
-        this.customerID = customerID;
-        this.customerAddress = customerAddress;
-        this.customerPostalCode = customerPostalCode;
-        this.customerPhoneNumber = customerPhoneNumber;
-        this.customerDivID = customerDivID;
-        this.customerCountryName = customerCountryName;
-        this.customerDivisionName = customerDivisionName;
-
-
-
-
-    }
-
-
-
-
 }
+

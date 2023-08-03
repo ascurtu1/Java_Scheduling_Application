@@ -7,6 +7,13 @@ public class division {
     private String divisionName;
     private int countryID;
 
+    /** Declaring constructor for the class. */
+    public division(int divisionID, String divisionName, int countryID) {
+        this.divisionID = divisionID;
+        this.divisionName = divisionName;
+        this.countryID = countryID;
+    }
+
 
     public String toString() {
         return (divisionName);
@@ -49,10 +56,4 @@ public class division {
         this.countryID = countryID;
     }
 
-    /** Declaring constructor for the class. */
-    public division(int divisionID, String divisionName, int countryID) {
-        this.divisionID = divisionID;
-        this.divisionName = divisionName;
-        this.countryID = countryID;
-    }
 }

@@ -3,8 +3,6 @@ package controller;
 import dao.appointmentDatabase;
 import dao.customerDatabase;
 import helper.JDBC;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,7 +17,6 @@ import model.customer;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.ZoneId;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -165,26 +162,27 @@ public class HomeController implements Initializable {
      * @param actionEvent button click
      */
     public void OnActionDeleteCustomer(ActionEvent actionEvent) throws SQLException {
-        customerToDelete = (customer) CustomersTableView.getSelectionModel().getSelectedItem();
-        int customerWAppointmentID = ((customer) CustomersTableView.getSelectionModel().getSelectedItem()).getCustomerID();
-        if (customerToDelete == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("ERROR: No Customer Selected");
-            alert.show();
-        } else if (appointmentDatabase.checkAssociatedAppointment(customerWAppointmentID)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("ERROR: Unable to delete customer that has an appointment");
-            alert.show();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("WARNING: Please confirm you would like to delete");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get()== ButtonType.OK) {
-                customerDatabase.deleteCustomer(customerWAppointmentID);
-                CustomersTableView.setItems(getAllCustomers());
+            customer customerToDelete = (customer) CustomersTableView.getSelectionModel().getSelectedItem();
+            int customerWAppointmentID = customerToDelete.getCustomerID();
 
-            }
+            if (customerToDelete == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("ERROR: No Customer Selected");
+                alert.show();
+            } else if (appointmentDatabase.checkAssociatedAppointment(customerWAppointmentID)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("ERROR: Unable to delete customer that has an appointment");
+                alert.show();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setContentText("WARNING: Please confirm you would like to delete");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    customerDatabase.deleteCustomer(customerWAppointmentID);
+                    CustomersTableView.setItems(getAllCustomers());
+                }
         }
+
     }
 
     /**
@@ -258,11 +256,41 @@ public class HomeController implements Initializable {
     /** Allows the user to view all appointments.
      * @param actionEvent button click */
     public void OnActionViewAll (ActionEvent actionEvent){
+        try {
+            AppointmentsTableView.setItems(appointmentDatabase.getAllAppointments());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        ApptIDColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        ApptTitleColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
+        ApptDescColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentDesc"));
+        ApptLocationColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
+        ApptContactColumn.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        ApptTypeColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
+        ApptStartColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentStartDateTime"));
+        ApptEndColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentEndDateTime"));
+        ApptCustIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        ApptUserIDColumn.setCellValueFactory(new PropertyValueFactory<>("userID"));
     }
-    /** Allows the user to view appointments this month.
+
+    /** Allows the user to view appointments this month. Accomplishing this by using SQL to query the appointments table.
      * @param actionEvent button click */
     public void OnActionViewMonth (ActionEvent actionEvent){
+
+        AppointmentsTableView.setItems(appointmentDatabase.getAppointmentByMonth());
+        ApptIDColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        ApptTitleColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
+        ApptDescColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentDesc"));
+        ApptLocationColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
+        ApptContactColumn.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        ApptTypeColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
+        ApptStartColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentStartDateTime"));
+        ApptEndColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentEndDateTime"));
+        ApptCustIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        ApptUserIDColumn.setCellValueFactory(new PropertyValueFactory<>("userID"));
+
     }
+
     /** Allows the user to view appointments this week.
      * @param actionEvent button click */
     public void OnActionViewWeek (ActionEvent actionEvent){

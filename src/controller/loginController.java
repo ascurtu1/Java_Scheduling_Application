@@ -62,7 +62,6 @@ public class loginController implements Initializable {
                 Login_Button.setText(Rb.getString("Login"));
                 ExitButton.setText(Rb.getString("Exit"));
             }
-
     }
 
     /**
@@ -73,6 +72,8 @@ public class loginController implements Initializable {
     public void OnActionLogIn(ActionEvent actionEvent) throws SQLException, IOException {
         String UserName = Username_TxtField.getText();
         String password = Pwd_TxtField.getText();
+
+        //creating a file that records all user login attempts
         String filename = "login_activity.txt";
         FileWriter fileWriter = new FileWriter(filename,true);
         PrintWriter outputFile = new PrintWriter(fileWriter);

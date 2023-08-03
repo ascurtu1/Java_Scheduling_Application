@@ -23,6 +23,8 @@ import java.time.*;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static controller.AddCustomerController.showAndWaitAlert;
+
 
 /** This class controls the logic to add appointments in the application. */
 public class AddAppointmentController implements Initializable {
@@ -71,7 +73,7 @@ public class AddAppointmentController implements Initializable {
             UserIDComboBox.setItems(userDatabase.getAllUsers());
         } catch (SQLException e) {
             e.printStackTrace();
-
+// Setting up local start and end times to populate the combo boxes in 10 min increments.
         }
         LocalTime start = LocalTime.of(0, 0);
         LocalTime end = LocalTime.of(23, 0);
@@ -87,21 +89,21 @@ public class AddAppointmentController implements Initializable {
         AptStartTimeCombo.getSelectionModel().select(LocalTime.of(8, 0));
         AptEndTimeCombo.getSelectionModel().select(LocalTime.of(9, 0));
     }
-    /** Validates that the EST date/time is correctly translated to local time to be compared and allow the user to only enter appointments between ET business hours.
+    /** Validates that the ET date/time is correctly translated to local time to be compared and allow the user to only enter appointments between ET business hours.
      * @param appointmentEnd
      * @param appointmentStart */
     public static boolean ValidateTimezone(LocalDateTime appointmentStart, LocalDateTime appointmentEnd) {
         boolean CorrectTimezone = true;
-
+// setting up ZoneID for local system time.
         ZoneId localZoneID = ZoneId.systemDefault();
         ZonedDateTime localStartDT = appointmentStart.atZone(localZoneID);
         ZonedDateTime localEndDT = appointmentEnd.atZone(localZoneID);
+        // setting up ZoneID for EST times.
         ZonedDateTime estStartDT = localStartDT.withZoneSameInstant(ZoneId.of("America/New_York"));
         ZonedDateTime estEndDT = localEndDT.withZoneSameInstant(ZoneId.of("America/New_York"));
-
         LocalTime localStartTime = estStartDT.toLocalTime();
         LocalTime localEndTime = estEndDT.toLocalTime();
-
+// logical checking to ensure time the user enters on their local system time is checked against ET business hours time and only allowing the user to set up appointment that falls within business hour limits.
         if (localStartTime.isBefore(LocalTime.of(8, 0, 0 )) || localEndTime.isAfter(LocalTime.of(22, 0,0))) {
             CorrectTimezone = false;
         }
@@ -111,10 +113,11 @@ public class AddAppointmentController implements Initializable {
     /** Validates that the user is not able to enter an appointment that overlaps with one already scheduled in the app.
      * @param customerID
      * @param appointmentEnd
-     * @param appointmentStart */
+     * @param appointmentStart
+     * @return NoAppointmentOverlap */
     public static boolean ValidateAppointmentOverlap(int customerID, LocalDateTime appointmentStart, LocalDateTime appointmentEnd) throws SQLException {
         boolean NoAppointmentOverlap = true;
-
+// error checking to ensure the user can only enter an appointment that is not overlapping one already in the app.
         ObservableList<appointment> appointmentOverlapCheckList = appointmentDatabase.getAllAppointments();
         for (appointment a : appointmentOverlapCheckList) {
             if (a.getCustomerID() == customerID) {
@@ -152,6 +155,7 @@ public class AddAppointmentController implements Initializable {
             LocalDateTime appointmentStart = LocalDateTime.of(startDate, startTime);
             LocalDateTime appointmentEnd = LocalDateTime.of(endDate, endTime);
 
+            //using the boolean methods to validate the appointment is scheduled within ET business hours and does not overlap with any prior existing.
             boolean CorrectTimezone = ValidateTimezone(appointmentStart, appointmentEnd);
             boolean CorrectAppointmentTime = ValidateAppointmentOverlap(customerID, appointmentStart, appointmentEnd);
 
@@ -181,13 +185,12 @@ public class AddAppointmentController implements Initializable {
 
 
     /**
-     * Allows the user to cancel added appointment information and return to Main screen.
-     *
+     * Allows the user to cancel added appointment information and return to Home screen.
+     * The alert is called using a previously set lambda expression.
      * @param actionEvent button click
      */
     public void OnActionCancelAppointment(ActionEvent actionEvent) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will cancel any changes. Please confirm to proceed.");
-        Optional<ButtonType> result = alert.showAndWait();
+        Optional<ButtonType> result = showAndWaitAlert.get();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Parent root = FXMLLoader.load(getClass().getResource("/View/home.fxml"));

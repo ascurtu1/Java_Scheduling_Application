@@ -10,10 +10,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /** This class is used for SQL statements to access the countries database table. */
-public class countryDatabase {
-    /** This method creates a list of all countries and their information.
-     * @return list of all users and their information from the MySQL database. */
 
+public class countryDatabase {
+
+
+    /** This method creates a list of all countries and their information.
+     * @return country List list of all countries and their information from the MySQL database. */
     public static ObservableList<country> getAllCountries() throws SQLException {
             ObservableList<country> countryList = FXCollections.observableArrayList();
             String sql = "SELECT Country_ID, Country FROM countries";

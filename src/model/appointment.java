@@ -19,9 +19,9 @@ public class appointment {
     private String contact;
     private String aptMonth;
     private int aptCount;
+    private String country;
 
-
-    /**Declaring constructor for the class and creating overloaded constructor to be able to create a different object that holds limited data for reports. */
+    /** Declaring constructor for the class and creating overloaded constructors to be able to create different objects that hold limited data for reports. */
 
     public appointment(int appointmentID, String appointmentTitle, String appointmentDesc, String appointmentLocation, String appointmentType, LocalDateTime appointmentStartDateTime, LocalDateTime appointmentEndDateTime, int customerID, int userID, int contactID, String contact) {
         this.appointmentID = appointmentID;
@@ -52,21 +52,50 @@ public class appointment {
         this.appointmentType = appointmentType;
         this.aptMonth = aptMonth;
         this.aptCount = aptCount;
-
     }
 
+    public appointment(String country, int aptCount) {
+        this.country = country;
+        this.aptCount = aptCount;
+    }
+
+    /**
+     * @return country;
+     */
+    public String getCountry() {
+        return country;
+    }
+
+    /**
+     * @param country the country to set;
+     */
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    /**
+     * @return aptMonth;
+     */
     public String getAptMonth() {
         return aptMonth;
     }
 
+    /**
+     * @param aptMonth the month of the appointment to set;
+     */
     public void setAptMonth(String aptMonth) {
         this.aptMonth = aptMonth;
     }
-
+    /**
+     * @return aptCount;
+     */
     public int getAptCount() {
         return aptCount;
     }
 
+    /**
+     * @param aptCount the count of appointments to set;
+     */
     public void setAptCount(int aptCount) {
         this.aptCount = aptCount;
     }

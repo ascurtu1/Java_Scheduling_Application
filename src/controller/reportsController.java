@@ -22,6 +22,9 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static controller.AddCustomerController.showAndWaitAlert;
+
+/** This class holds the logic for the reports  form. */
 public class reportsController implements Initializable {
 
 
@@ -48,6 +51,8 @@ public class reportsController implements Initializable {
     public TableColumn ApptbyCountryTotalLbl;
     public Button CancelBtn;
 
+
+    /** Populates the contact combo box and the tables with information from the database.*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 //populating the contact combo box
@@ -66,7 +71,7 @@ public class reportsController implements Initializable {
         ContactScheduleAppointmentCustomerColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
 
 
-//populating the appointment type and month table table
+//populating the appointment type and month table
         try {
             TypeAndMonthTableview.setItems(appointmentDatabase.getAppointmentsByTypeMonth());
         } catch (SQLException throwables) {
@@ -76,8 +81,17 @@ public class reportsController implements Initializable {
         AppointmentMonthColumn.setCellValueFactory(new PropertyValueFactory<>("aptMonth"));
         AppointmentTotalColumn.setCellValueFactory(new PropertyValueFactory<>("aptCount"));
 
+//populating the appointment country and country table
+        try {
+            ApptByCountryTable.setItems(appointmentDatabase.getAppointmentByCountry());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        ApptbyCountryLbl.setCellValueFactory(new PropertyValueFactory<>("country"));
+        ApptbyCountryTotalLbl.setCellValueFactory(new PropertyValueFactory<>("aptCount"));
 
     }
+
     /** Allows the user to choose contact from pre-populated combo box selection.
      * @param actionEvent selection */
     public void OnActionSelectContact(ActionEvent actionEvent) throws SQLException {
@@ -94,10 +108,10 @@ public class reportsController implements Initializable {
 
 
     /** Allows the user to cancel any changes to the reports form and return to Home screen.
+     * The alert is created by calling a lambda expression.
      * @param actionEvent selection */
     public void OnActionCancelReports(ActionEvent actionEvent) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will cancel any changes. Please confirm to proceed");
-        Optional<ButtonType> result = alert.showAndWait();
+        Optional<ButtonType> result = showAndWaitAlert.get();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Parent root = FXMLLoader.load(getClass().getResource("/View/home.fxml"));

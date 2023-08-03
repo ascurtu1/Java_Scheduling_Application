@@ -25,6 +25,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static controller.AddCustomerController.showAndWaitAlert;
+
 /** This class holds the logic for the Modify Customer form. */
 public class ModifyCustomerController implements Initializable {
 
@@ -114,7 +116,6 @@ public class ModifyCustomerController implements Initializable {
                 stage.setTitle("Scheduling Application");
                 stage.setScene(scene);
                 stage.show();
-
             }
 
         } catch (NullPointerException e) {
@@ -127,12 +128,11 @@ public class ModifyCustomerController implements Initializable {
 
     /**
      * Allows the user to cancel the modified customer changes and return to the Main screen.
-     *
+     * The alert is called using a lambda expression that is being called.
      * @param actionEvent selection
      */
     public void OnActionCancelModifyCustomer(ActionEvent actionEvent) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will cancel any changes. Please confirm to proceed.");
-        Optional<ButtonType> result = alert.showAndWait();
+        Optional<ButtonType> result = showAndWaitAlert.get();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Parent root = FXMLLoader.load(getClass().getResource("/View/home.fxml"));
@@ -144,15 +144,16 @@ public class ModifyCustomerController implements Initializable {
     }
 
     /**
-     * Populates the text fields and combo boxes in the form with the information from the main screen and database.
+     * Populates the text fields and combo boxes in the Modify Customer form with the information from the main screen and database.
+     * @param customer
      */
 
     public void populateCustomer(customer customer) throws SQLException {
-
+//creating observable lists to pull information from the database dao
         ObservableList<country> ModifyCustomerCountryList = countryDatabase.getAllCountries();
         ObservableList<division> ModifyCustomerStateList = divisionDatabase.getAllDivisions();
         ObservableList<division> StateSelected = FXCollections.observableArrayList();
-
+//setting the fields with the previously populated information from the selected customer
         ModifyCustomerIDTxt.setText(String.valueOf(customer.getCustomerID()));
         ModifyCustomerNameTxt.setText(customer.getCustomerName());
         ModifyCustomerAddressTxt.setText(customer.getCustomerAddress());

@@ -20,6 +20,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 
 /** This class controls the logic to add customers in the application. */
 public class AddCustomerController implements Initializable {
@@ -50,21 +51,33 @@ public class AddCustomerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            AddCustomerCountryCombo.setItems(countryDatabase.getAllCountries());
-        } catch (SQLException e) {
-            e.printStackTrace();
 
+        /**
+         * Lambda expression is used here to populate the customer country combo box with all possible countries. By
+         * encapsulating the code inside a lambda,the code becomes clearer and easier to read. It also allows the programmer
+         * to reuse the setCountryItems lambda whenever needed to set the items for the AddCustomerCountryCombo.
+         * It promotes code usability and reduces duplication.*/
+
+        Runnable setCountryItems = () -> {
+            try {
+                AddCustomerCountryCombo.setItems(countryDatabase.getAllCountries());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        };
+
+        setCountryItems.run();
     }
-}
 
     /**
-     * Allows the user to choose state from pre-populated combo box selection based on their country selection.
+     * Allows the user to choose state from pre-populated combo box selection based on the country selection.
+     *
      * @param actionEvent selection
      */
     public void OnActionCustomerState(ActionEvent actionEvent) throws SQLException {
-        country SelectedCountry = AddCustomerCountryCombo.getSelectionModel().getSelectedItem();
 
+        //using the method to access country ID from MySQL database and set the combo boxes with the correct country states.
+        country SelectedCountry = AddCustomerCountryCombo.getSelectionModel().getSelectedItem();
         if ((SelectedCountry.getCountryID() == 1)) {
             ObservableList<division> USDivisions = divisionDatabase.getUSDivisions();
             AddCustomerStateCombo.setItems(USDivisions);
@@ -77,63 +90,80 @@ public class AddCustomerController implements Initializable {
         }
     }
 
-        /**
-         * Allows the user to save added customer information.
-         * @param actionEvent button click
-         */
-        public void OnActionSaveCustomer (ActionEvent actionEvent){
-            try {
-                String name = AddCustomerNameTxt.getText();
-                String address = AddCustomerAddressTxt.getText();
-                String phoneNumber = AddCustomerPhoneTxt.getText();
-                String postal = AddCustomerPostalTxt.getText();
-                int stateID = AddCustomerStateCombo.getSelectionModel().getSelectedItem().getDivisionID();
+
+    /**
+     * Allows the user to save added customer information.
+     *
+     * @param actionEvent button click
+     */
+    public void OnActionSaveCustomer(ActionEvent actionEvent) {
+        try {
+            String name = AddCustomerNameTxt.getText();
+            String address = AddCustomerAddressTxt.getText();
+            String phoneNumber = AddCustomerPhoneTxt.getText();
+            String postal = AddCustomerPostalTxt.getText();
+            int stateID = AddCustomerStateCombo.getSelectionModel().getSelectedItem().getDivisionID();
 
 
-                if (name.isEmpty() || address.isEmpty() || phoneNumber.isEmpty() || postal.isEmpty() || (AddCustomerCountryCombo.getValue() == null) ||
-                        (AddCustomerStateCombo.getValue() == null)) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "Error: Fields are blank");
-                    alert.show();
-                } else {
-                    customerDatabase.addCustomer(name, address, postal,phoneNumber , stateID);
-                    Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-                    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/home.fxml"));
-                    Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
-                    stage.setTitle("Scheduling Application");
-                    stage.setScene(scene);
-                    stage.show();
-
-                }
-
-            } catch (NullPointerException e) {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Error: No fields may be left blank");
+            if (name.isEmpty() || address.isEmpty() || phoneNumber.isEmpty() || postal.isEmpty() || (AddCustomerCountryCombo.getValue() == null) ||
+                    (AddCustomerStateCombo.getValue() == null)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Error: Fields are blank");
                 alert.show();
-
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-
-        /**
-         * Allows the user to cancel added appointment information and return to Main screen.
-         *
-         * @param actionEvent button click
-         */
-        public void OnActionCancelAddCustomer (ActionEvent actionEvent) throws IOException {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will cancel any changes. Please confirm to proceed.");
-            Optional<ButtonType> result = alert.showAndWait();
-
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                Parent root = FXMLLoader.load(getClass().getResource("/View/home.fxml"));
+            } else {
+                customerDatabase.addCustomer(name, address, postal, phoneNumber, stateID);
                 Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-                Scene scene = new Scene(root, 1080, 720);
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/home.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
+                stage.setTitle("Scheduling Application");
                 stage.setScene(scene);
                 stage.show();
+
             }
+
+        } catch (NullPointerException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Error: No fields may be left blank");
+            alert.show();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * Lambda is used here to encapsulate the code to show the alert and wait for the user's response.
+     * This approach promotes code re-usability and readability. It allows the programmer to call this
+     * expression in multiple classes to show the alert without having to rewrite all of the code.
+     */
+
+    public static Supplier<Optional<ButtonType>> showAndWaitAlert = () -> {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will cancel any changes. Please confirm to proceed");
+        return alert.showAndWait();
+    };
+
+
+
+    /**
+     * Allows the user to cancel added appointment information and return to the Home screen.
+     * @param actionEvent button click
+     */
+
+    public void OnActionCancelAddCustomer(ActionEvent actionEvent) throws IOException {
+
+// Calling the lambda expression
+        Optional<ButtonType> result = showAndWaitAlert.get();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Parent root = FXMLLoader.load(getClass().getResource("/View/home.fxml"));
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 1080, 720);
+            stage.setScene(scene);
+            stage.show();
         }
     }
+}
+
 

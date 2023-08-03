@@ -13,6 +13,8 @@ import java.sql.SQLException;
 /** This class is used for SQL statements to access the divisions database table. */
 public class divisionDatabase {
 
+    /** This method creates a list of all divisions and their information.
+     * @return divisionList list of all divisions and their information from the MySQL database. */
     public static ObservableList<division> getAllDivisions() throws SQLException {
 
         ObservableList<division> divisionList = FXCollections.observableArrayList();
@@ -30,7 +32,8 @@ public class divisionDatabase {
 
     }
 
-
+    /** This method creates a list of all US divisions and their information.
+     * @return USDivisionList list of all  US divisions and their information from the MySQL database. */
     public static ObservableList<division> getUSDivisions() throws SQLException {
         ObservableList<division> USDivisionList = FXCollections.observableArrayList();
         String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = 1";
@@ -46,7 +49,8 @@ public class divisionDatabase {
         return USDivisionList;
     }
 
-
+    /** This method creates a list of all UK divisions and their information.
+     * @return UKDivisionList list of all  UK divisions and their information from the MySQL database. */
     public static ObservableList<division> getUKDivisions() throws SQLException {
         ObservableList<division> UKDivisionList = FXCollections.observableArrayList();
         String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = 2";
@@ -62,6 +66,9 @@ public class divisionDatabase {
         return UKDivisionList;
     }
 
+
+    /** This method creates a list of all Canada divisions and their information.
+     * @return CanadaDivisionList list of all Canada divisions and their information from the MySQL database. */
     public static ObservableList<division> getCanadaDivision() throws SQLException {
         ObservableList<division> CanadaDivisionList = FXCollections.observableArrayList();
         String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = 3";

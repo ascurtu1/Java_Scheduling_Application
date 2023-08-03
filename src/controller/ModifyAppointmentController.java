@@ -27,6 +27,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static controller.AddCustomerController.showAndWaitAlert;
+
 /** This class controls the logic to modify appointments in the application. */
 public class ModifyAppointmentController implements Initializable {
 
@@ -78,7 +80,7 @@ public class ModifyAppointmentController implements Initializable {
             e.printStackTrace();
 
         }
-
+// Setting up local start and end times to populate the combo boxes.
         LocalTime start = LocalTime.of(0, 0);
         LocalTime end = LocalTime.of(23, 0);
         while (start.isBefore(end.plusSeconds(1))) {
@@ -96,18 +98,19 @@ public class ModifyAppointmentController implements Initializable {
 
 
 
-    /** Validates that the EST date/time is correctly translated to local time to be compared and allow the user to only enter appointments between ET business hours.
+    /** Validates that the ET date/time is correctly translated to local time to be compared and allow the user to only enter appointments between ET business hours.
      * @param appointmentEnd
      * @param appointmentStart */
     public static boolean ValidateTimezone(LocalDateTime appointmentStart, LocalDateTime appointmentEnd) {
         boolean CorrectTimezone = true;
-
+// setting up ZoneID for local time.
         ZoneId localZoneID = ZoneId.systemDefault();
         ZonedDateTime localStartDT = appointmentStart.atZone(localZoneID);
         ZonedDateTime localEndDT = appointmentEnd.atZone(localZoneID);
+        // setting up ZoneID for EST time.
         ZonedDateTime estStartDT = localStartDT.withZoneSameInstant(ZoneId.of("America/New_York"));
         ZonedDateTime estEndDT = localEndDT.withZoneSameInstant(ZoneId.of("America/New_York"));
-
+// logical checking to ensure time the user enters on their local system time is checked against ET business hours to allow appropriate scheduling within business hours only.
         LocalTime localStartTime = estStartDT.toLocalTime();
         LocalTime localEndTime = estEndDT.toLocalTime();
 
@@ -121,10 +124,11 @@ public class ModifyAppointmentController implements Initializable {
     /** Validates that the user is not able to enter an appointment that overlaps with one already scheduled in the app.
      * @param customerID
      * @param appointmentEnd
-     * @param appointmentStart */
+     * @param appointmentStart
+     * @return NoAppointmentOverlap */
     public static boolean ValidateAppointmentOverlap(int customerID, LocalDateTime appointmentStart, LocalDateTime appointmentEnd) throws SQLException {
         boolean NoAppointmentOverlap = true;
-
+// error checking to ensure the user can only enter an appointment that is not overlapping another one.
         ObservableList<appointment> appointmentOverlapCheckList = appointmentDatabase.getAllAppointments();
         for (appointment a : appointmentOverlapCheckList) {
             if (a.getCustomerID() == customerID) {
@@ -162,7 +166,7 @@ public class ModifyAppointmentController implements Initializable {
 
             LocalDateTime appointmentStart = LocalDateTime.of(startDate, startTime);
             LocalDateTime appointmentEnd = LocalDateTime.of(endDate, endTime);
-
+//using the boolean methods to validate the appointment is scheduled within ET business hours and does not overlap with any already existing appointments.
             boolean CorrectTimezone = ValidateTimezone(appointmentStart, appointmentEnd);
             boolean CorrectAppointmentTime = ValidateAppointmentOverlap(customerID, appointmentStart, appointmentEnd);
 
@@ -193,12 +197,11 @@ public class ModifyAppointmentController implements Initializable {
 
     /**
      * Allows the user to cancel any changes to the modified appointment form and return to Home screen.
-     *
+     * The alert is created using a lambda expression that is being called.
      * @param actionEvent selection
      */
     public void OnActionCancelModifyAppointment(ActionEvent actionEvent) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will cancel any changes. Please confirm to proceed.");
-        Optional<ButtonType> result = alert.showAndWait();
+        Optional<ButtonType> result = showAndWaitAlert.get();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Parent root = FXMLLoader.load(getClass().getResource("/View/home.fxml"));
@@ -208,8 +211,14 @@ public class ModifyAppointmentController implements Initializable {
             stage.show();
         }
     }
-
+    /**
+     * Allows the user to populate the Modify Appointment screen with information from the Main screen and database.
+     *
+     * @param appointment appointment
+     */
     public void populateAppointment(appointment appointment) throws SQLException {
+
+        //populating the Modify Appointment form with information from the selected appointment
         ModifyAppointmentTxt.setText(String.valueOf(appointment.getAppointmentID()));
         ModifyTitleTxt.setText(appointment.getAppointmentTitle());
         ModifyDescriptionTxt.setText(appointment.getAppointmentDesc());
@@ -220,6 +229,7 @@ public class ModifyAppointmentController implements Initializable {
         ModifyEndDatePicker.setValue(appointment.getAppointmentEndDateTime().toLocalDate());
         ModifyEndTimeCombo.setValue(appointment.getAppointmentEndDateTime().toLocalTime());
 
+        //creating observable lists to pull information from the dao & using for loops to iterate through the lists and get the needed database information
         ObservableList<customer> CustomersToPopulate = customerDatabase.getAllCustomers();
         for (customer customer : CustomersToPopulate) {
             if (appointment.getCustomerID() == customer.getCustomerID()) {
