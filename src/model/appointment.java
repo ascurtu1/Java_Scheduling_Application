@@ -37,6 +37,7 @@ public class appointment {
         this.contact = contact;
     }
 
+    // constructor used for contacts schedule table in reports
     public appointment(int appointmentID, String appointmentTitle, String appointmentDesc, String appointmentType, LocalDateTime appointmentStartDateTime, LocalDateTime appointmentEndDateTime, int customerID) {
         this.appointmentID = appointmentID;
         this.appointmentTitle = appointmentTitle;
@@ -47,13 +48,13 @@ public class appointment {
         this.customerID = customerID;
 
     }
-
+    // constructor used for appointments by type and month table in reports
     public appointment(String appointmentType, String aptMonth, int aptCount) {
         this.appointmentType = appointmentType;
         this.aptMonth = aptMonth;
         this.aptCount = aptCount;
     }
-
+    // constructor used for total appointments by country table in reports
     public appointment(String country, int aptCount) {
         this.country = country;
         this.aptCount = aptCount;

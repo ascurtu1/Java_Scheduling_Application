@@ -108,7 +108,7 @@ public class reportsController implements Initializable {
 
 
     /** Allows the user to cancel any changes to the reports form and return to Home screen.
-     * The alert is created by calling a lambda expression.
+     * The alert is created by calling a lambda expression to reduce redundancy.
      * @param actionEvent selection */
     public void OnActionCancelReports(ActionEvent actionEvent) throws IOException {
         Optional<ButtonType> result = showAndWaitAlert.get();

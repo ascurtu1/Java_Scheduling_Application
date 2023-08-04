@@ -235,7 +235,75 @@ public class appointmentDatabase {
         }
         return appointmentByMonthList;
 
+    }
 
+    /** This method creates a list of all appointments and filters them by week. This is used in the Home controller.
+     * @return appointmentByWeekList. */
+
+    public static ObservableList getAppointmentByWeek() {
+        ObservableList<appointment> appointmentByWeekList = FXCollections.observableArrayList();
+        try {
+            String sql = "SELECT appointments.Appointment_ID, appointments.Title, appointments.Description, appointments.Location, appointments.Type, appointments.Start, appointments.End, appointments.Customer_ID, appointments.User_ID, appointments.Contact_ID, contacts.Contact_Name from appointments JOIN contacts on appointments.Contact_ID = contacts.Contact_ID WHERE WEEK(appointments.Start) = WEEK(NOW())";
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            ResultSet Rs = ps.executeQuery();
+            while (Rs.next()) {
+                int appointmentID = Rs.getInt("Appointment_ID");
+                String appointmentTitle = Rs.getString("Title");
+                String Description = Rs.getString("Description");
+                String Location = Rs.getString("Location");
+                String appointmentType = Rs.getString("Type");
+                LocalDateTime appointmentStart = Rs.getTimestamp("Start").toLocalDateTime();
+                LocalDateTime appointmentEnd = Rs.getTimestamp("End").toLocalDateTime();
+                int customerID = Rs.getInt("Customer_ID");
+                int userID = Rs.getInt("User_ID");
+                int contactID = Rs.getInt("Contact_ID");
+                String contactName = Rs.getString("Contact_Name");
+
+                appointment AppointmentByWeek = new appointment(appointmentID, appointmentTitle, Description, Location, appointmentType, appointmentStart, appointmentEnd, customerID, userID, contactID, contactName);
+                appointmentByWeekList.add(AppointmentByWeek);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return appointmentByWeekList;
+
+    }
+
+    /** This method updates the appointment list in the database.
+     * @param appointmentID
+     * @param appointmentTitle
+     * @param Description
+     * @param Location
+     * @param appointmentType
+     * @param appointmentStart
+     * @param appointmentEnd
+     * @param customerID
+     * @param userID
+     * @param contactID
+     *
+     * */
+    public static void updateAppointment (int appointmentID, String appointmentTitle, String Description, String Location, String appointmentType, LocalDateTime appointmentStart, LocalDateTime appointmentEnd, int customerID, int userID, int contactID) throws SQLException {
+        try {
+            String sql = "UPDATE APPOINTMENTS set Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE APPOINTMENT_ID = ?";
+            PreparedStatement pst = JDBC.getConnection().prepareStatement(sql);
+            pst.setString(1, appointmentTitle);
+            pst.setString(2, Description);
+            pst.setString(3, Location);
+            pst.setString(4, appointmentType);
+            pst.setTimestamp(5, Timestamp.valueOf(appointmentStart));
+            pst.setTimestamp(6, Timestamp.valueOf(appointmentEnd));
+            pst.setInt(7, customerID);
+            pst.setInt(8, userID);
+            pst.setInt(9, contactID);
+            pst.setInt(10, appointmentID);
+
+            pst.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 

@@ -150,6 +150,7 @@ public class ModifyAppointmentController implements Initializable {
     public void OnActionSaveModifyAppointment(ActionEvent actionEvent) {
 
         try {
+            int appointmentID = Integer.parseInt(ModifyAppointmentTxt.getText());
             String title = ModifyTitleTxt.getText();
             String description = ModifyDescriptionTxt.getText();
             String location = ModifyLocationTxt.getText();
@@ -180,7 +181,7 @@ public class ModifyAppointmentController implements Initializable {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Error: There is an overlapping appointment");
                 alert.show();
             } else {
-                appointmentDatabase.addAppointment(title, description, location, type, appointmentStart, appointmentEnd, customerID, userID, contactID);
+                appointmentDatabase.updateAppointment(appointmentID, title, description, location, type, appointmentStart, appointmentEnd, customerID, userID, contactID);
                 Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/home.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
@@ -197,7 +198,7 @@ public class ModifyAppointmentController implements Initializable {
 
     /**
      * Allows the user to cancel any changes to the modified appointment form and return to Home screen.
-     * The alert is created using a lambda expression that is being called.
+     * The alert is created using a lambda expression that is being used to reduce redundancy.
      * @param actionEvent selection
      */
     public void OnActionCancelModifyAppointment(ActionEvent actionEvent) throws IOException {

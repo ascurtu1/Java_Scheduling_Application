@@ -186,7 +186,7 @@ public class AddAppointmentController implements Initializable {
 
     /**
      * Allows the user to cancel added appointment information and return to Home screen.
-     * The alert is called using a previously set lambda expression.
+     * The alert is called using a previously set lambda expression to reduce redundancy.
      * @param actionEvent button click
      */
     public void OnActionCancelAppointment(ActionEvent actionEvent) throws IOException {

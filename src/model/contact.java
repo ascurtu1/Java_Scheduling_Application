@@ -6,6 +6,7 @@ public class contact {
     private String contactName;
     private String contactEmail;
 
+    //to string needed to properly populate the combo boxes
     public String toString() {
         return (contactName);
     }

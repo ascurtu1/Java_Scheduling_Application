@@ -294,5 +294,16 @@ public class HomeController implements Initializable {
     /** Allows the user to view appointments this week.
      * @param actionEvent button click */
     public void OnActionViewWeek (ActionEvent actionEvent){
+        AppointmentsTableView.setItems(appointmentDatabase.getAppointmentByWeek());
+        ApptIDColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        ApptTitleColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
+        ApptDescColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentDesc"));
+        ApptLocationColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
+        ApptContactColumn.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        ApptTypeColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
+        ApptStartColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentStartDateTime"));
+        ApptEndColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentEndDateTime"));
+        ApptCustIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        ApptUserIDColumn.setCellValueFactory(new PropertyValueFactory<>("userID"));
     }
 }

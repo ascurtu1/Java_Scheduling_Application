@@ -128,7 +128,7 @@ public class ModifyCustomerController implements Initializable {
 
     /**
      * Allows the user to cancel the modified customer changes and return to the Main screen.
-     * The alert is called using a lambda expression that is being called.
+     * The alert is called using a lambda expression that is being called to reduce redundancy.
      * @param actionEvent selection
      */
     public void OnActionCancelModifyCustomer(ActionEvent actionEvent) throws IOException {
