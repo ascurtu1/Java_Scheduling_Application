@@ -5,7 +5,7 @@ Purpose: The purpose of this application is a GUI-based scheduling desktop appli
 fictional global contracting organization to add, modify, and delete both customers and appointments. It also includes
 reports and a user-friendly GUI. The application is connected and pulls data from a MySQL database.
 
-Author/Contact: Alexandra Scurtu; Student ID: 010872975
+Author/Contact: Alexandra Scurtu
 
 Student Application Version/Date: 1.0; 8/7/2023
 
