@@ -67,6 +67,8 @@ public class ModifyAppointmentController implements Initializable {
     private customer newCustomer;
     private user newUser;
     private contact newContact;
+    private LocalDateTime originalStart;
+    private LocalDateTime originalEnd;
 
 
     /** Populates the start/end times, contact, customer ID, and User ID combo boxes with data from the database. */
@@ -167,17 +169,24 @@ public class ModifyAppointmentController implements Initializable {
 
             LocalDateTime appointmentStart = LocalDateTime.of(startDate, startTime);
             LocalDateTime appointmentEnd = LocalDateTime.of(endDate, endTime);
-//using the boolean methods to validate the appointment is scheduled within ET business hours and does not overlap with any already existing appointments.
+
+            // Using the boolean methods to validate the appointment is scheduled within ET business hours & does not overlap with any already existing appointments.
             boolean CorrectTimezone = ValidateTimezone(appointmentStart, appointmentEnd);
-            boolean CorrectAppointmentTime = ValidateAppointmentOverlap(customerID, appointmentStart, appointmentEnd);
+            boolean CorrectAppointmentDateTime = true;  // Default to true when no change in start/end time
+
+            if ((appointmentStart.equals(originalStart) || appointmentEnd.equals(originalEnd)) &&
+                    (appointmentStart.toLocalDate().equals(originalStart.toLocalDate()) ||
+                            appointmentEnd.toLocalDate().equals(originalEnd.toLocalDate()))) {
+                CorrectAppointmentDateTime = ValidateAppointmentOverlap(customerID, appointmentStart, appointmentEnd);
+            }
 
             if (title.isEmpty() || description.isEmpty() || location.isEmpty() || type.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Error: No fields may be left blank");
                 alert.show();
             } else if (CorrectTimezone == false) {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Error: Appointments must be scheduled in accordance to our business hours between 8:00am and 10:00pm ET");
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Error: Appointments must be scheduled in accordance with our business hours between 8:00am and 10:00pm ET");
                 alert.show();
-            } else if (CorrectAppointmentTime == false) {
+            } else if (!CorrectAppointmentDateTime) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Error: There is an overlapping appointment");
                 alert.show();
             } else {
@@ -190,10 +199,9 @@ public class ModifyAppointmentController implements Initializable {
                 stage.show();
             }
         } catch (NullPointerException | SQLException | IOException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Error: No fields may be left blank");
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Error: An error occurred");
             alert.show();
         }
-
     }
 
     /**
