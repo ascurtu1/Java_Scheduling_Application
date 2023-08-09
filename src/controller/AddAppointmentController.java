@@ -104,7 +104,10 @@ public class AddAppointmentController implements Initializable {
         LocalTime localStartTime = estStartDT.toLocalTime();
         LocalTime localEndTime = estEndDT.toLocalTime();
 // logical checking to ensure time the user enters on their local system time is checked against ET business hours time and only allowing the user to set up appointment that falls within business hour limits.
-        if (localStartTime.isBefore(LocalTime.of(8, 0, 0 )) || localEndTime.isAfter(LocalTime.of(22, 0,0))) {
+        if (localStartTime.isBefore(LocalTime.of(8, 0, 0 )) || localStartTime.isAfter(LocalTime.of(22, 0,0)) || localEndTime.isAfter(LocalTime.of(22, 0,0)) || localEndTime.isBefore(LocalTime.of(8, 0, 0 )) ||
+
+            appointmentEnd.getHour() >= 22) {  // Additional check for military time restriction
+
             CorrectTimezone = false;
         }
 
@@ -112,18 +115,22 @@ public class AddAppointmentController implements Initializable {
     }
     /** Validates that the user is not able to enter an appointment that overlaps with one already scheduled in the app.
      * @param customerID
+     * @param contactID
      * @param appointmentEnd
      * @param appointmentStart
      * @return NoAppointmentOverlap */
-    public static boolean ValidateAppointmentOverlap(int customerID, LocalDateTime appointmentStart, LocalDateTime appointmentEnd) throws SQLException {
+    public static boolean ValidateAppointmentOverlap(int customerID, int contactID, LocalDateTime appointmentStart, LocalDateTime appointmentEnd) throws SQLException {
         boolean NoAppointmentOverlap = true;
 // error checking to ensure the user can only enter an appointment that is not overlapping one already in the app.
         ObservableList<appointment> appointmentOverlapCheckList = appointmentDatabase.getAllAppointments();
         for (appointment a : appointmentOverlapCheckList) {
             if (a.getCustomerID() == customerID) {
-                if (appointmentStart.isEqual(a.getAppointmentStartDateTime()) || appointmentEnd.isEqual(a.getAppointmentEndDateTime()) || appointmentStart.isAfter(a.getAppointmentStartDateTime()) && appointmentStart.isBefore(a.getAppointmentEndDateTime())) {
-                    NoAppointmentOverlap = false;
+                if ((a.getCustomerID() == customerID) && ((a.getContactID() == contactID))) {
+                    {
+                        NoAppointmentOverlap = false;
+                    }
                 }
+
             }
 
         } return NoAppointmentOverlap;
@@ -157,7 +164,7 @@ public class AddAppointmentController implements Initializable {
 
             //using the boolean methods to validate the appointment is scheduled within ET business hours and does not overlap with any prior existing.
             boolean CorrectTimezone = ValidateTimezone(appointmentStart, appointmentEnd);
-            boolean CorrectAppointmentTime = ValidateAppointmentOverlap(customerID, appointmentStart, appointmentEnd);
+            boolean CorrectAppointmentTime = ValidateAppointmentOverlap(customerID, contactID, appointmentStart, appointmentEnd);
 
             if (title.isEmpty() || description.isEmpty() || location.isEmpty() || type.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Error: No fields may be left blank");

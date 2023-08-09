@@ -67,11 +67,9 @@ public class ModifyAppointmentController implements Initializable {
     private customer newCustomer;
     private user newUser;
     private contact newContact;
-    private LocalDateTime originalStart;
-    private LocalDateTime originalEnd;
 
 
-    /** Populates the start/end times, contact, customer ID, and User ID combo boxes with data from the database. */
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -99,10 +97,12 @@ public class ModifyAppointmentController implements Initializable {
     }
 
 
-
-    /** Validates that the ET date/time is correctly translated to local time to be compared and allow the user to only enter appointments between ET business hours.
+    /**
+     * Validates that the ET date/time is correctly translated to local time to be compared and allow the user to only enter appointments between ET business hours.
+     *
      * @param appointmentEnd
-     * @param appointmentStart */
+     * @param appointmentStart
+     */
     public static boolean ValidateTimezone(LocalDateTime appointmentStart, LocalDateTime appointmentEnd) {
         boolean CorrectTimezone = true;
 // setting up ZoneID for local time.
@@ -116,24 +116,31 @@ public class ModifyAppointmentController implements Initializable {
         LocalTime localStartTime = estStartDT.toLocalTime();
         LocalTime localEndTime = estEndDT.toLocalTime();
 
-        if (localStartTime.isBefore(LocalTime.of(8, 0, 0 )) || localEndTime.isAfter(LocalTime.of(22, 0,0))) {
+        if (localStartTime.isBefore(LocalTime.of(8, 0, 0 )) || localStartTime.isAfter(LocalTime.of(22, 0,0)) || localEndTime.isAfter(LocalTime.of(22, 0,0)) || localEndTime.isBefore(LocalTime.of(8, 0, 0 )) ||
+
+                appointmentEnd.getHour() >= 22) {  // Additional check for military time restriction
+
             CorrectTimezone = false;
         }
 
         return CorrectTimezone;
     }
 
+
+
     /** Validates that the user is not able to enter an appointment that overlaps with one already scheduled in the app.
      * @param customerID
+     * @param contactID
      * @param appointmentEnd
+     * @param appointmentID
      * @param appointmentStart
      * @return NoAppointmentOverlap */
-    public static boolean ValidateAppointmentOverlap(int customerID, LocalDateTime appointmentStart, LocalDateTime appointmentEnd) throws SQLException {
+    public static boolean ValidateAppointmentOverlap(int customerID, int appointmentID, int contactID, LocalDateTime appointmentStart, LocalDateTime appointmentEnd) throws SQLException {
         boolean NoAppointmentOverlap = true;
 // error checking to ensure the user can only enter an appointment that is not overlapping another one.
         ObservableList<appointment> appointmentOverlapCheckList = appointmentDatabase.getAllAppointments();
         for (appointment a : appointmentOverlapCheckList) {
-            if (a.getCustomerID() == customerID) {
+            if ((a.getCustomerID() == customerID) && (a.getAppointmentID() != appointmentID) && ((a.getContactID() == contactID))) {
                 if (appointmentStart.isEqual(a.getAppointmentStartDateTime()) || appointmentEnd.isEqual(a.getAppointmentEndDateTime()) || appointmentStart.isAfter(a.getAppointmentStartDateTime()) && appointmentStart.isBefore(a.getAppointmentEndDateTime())) {
                     NoAppointmentOverlap = false;
                 }
@@ -169,24 +176,17 @@ public class ModifyAppointmentController implements Initializable {
 
             LocalDateTime appointmentStart = LocalDateTime.of(startDate, startTime);
             LocalDateTime appointmentEnd = LocalDateTime.of(endDate, endTime);
-
-            // Using the boolean methods to validate the appointment is scheduled within ET business hours & does not overlap with any already existing appointments.
+//using the boolean methods to validate the appointment is scheduled within ET business hours and does not overlap with any already existing appointments.
             boolean CorrectTimezone = ValidateTimezone(appointmentStart, appointmentEnd);
-            boolean CorrectAppointmentDateTime = true;  // Default to true when no change in start/end time
-
-            if ((appointmentStart.equals(originalStart) || appointmentEnd.equals(originalEnd)) &&
-                    (appointmentStart.toLocalDate().equals(originalStart.toLocalDate()) ||
-                            appointmentEnd.toLocalDate().equals(originalEnd.toLocalDate()))) {
-                CorrectAppointmentDateTime = ValidateAppointmentOverlap(customerID, appointmentStart, appointmentEnd);
-            }
+            boolean CorrectAppointmentTime = ValidateAppointmentOverlap(customerID, appointmentID, contactID, appointmentStart, appointmentEnd);
 
             if (title.isEmpty() || description.isEmpty() || location.isEmpty() || type.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Error: No fields may be left blank");
                 alert.show();
             } else if (CorrectTimezone == false) {
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Error: Appointments must be scheduled in accordance with our business hours between 8:00am and 10:00pm ET");
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Error: Appointments must be scheduled in accordance to our business hours between 8:00am and 10:00pm ET");
                 alert.show();
-            } else if (!CorrectAppointmentDateTime) {
+            } else if (CorrectAppointmentTime == false) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Error: There is an overlapping appointment");
                 alert.show();
             } else {
@@ -199,9 +199,10 @@ public class ModifyAppointmentController implements Initializable {
                 stage.show();
             }
         } catch (NullPointerException | SQLException | IOException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Error: An error occurred");
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Error: No fields may be left blank");
             alert.show();
         }
+
     }
 
     /**
