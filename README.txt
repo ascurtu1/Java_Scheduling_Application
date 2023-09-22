@@ -3,7 +3,7 @@ Title: Scheduling Application
 
 Purpose: The purpose of this application is a GUI-based scheduling desktop application. The application is used by a
 fictional global contracting organization to add, modify, and delete both customers and appointments. It also includes
-reports and a user-friendly GUI. The application is connected and pulls data from a MySQL database.
+reports and a user-friendly GUI. The application is connected to and pulls data from a MySQL database.
 
 Author/Contact: Alexandra Scurtu
 
